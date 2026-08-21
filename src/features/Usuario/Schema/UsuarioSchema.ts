@@ -99,3 +99,107 @@ export const UserUpdateSchema = z.object({
 });
 
 export type UserUpdateType = z.infer<typeof UserUpdateSchema>;
+
+
+export const MiPerfilSchema = z.object({
+    id: z.string(),
+    username: z.string(),
+    correo: z.string().email(),
+    estado: z.string(),
+    correoVerificadoEn: z.string().nullable(),
+    ultimoAccesoEn: z.string().nullable(),
+    createdAt: z.string(),
+
+    perfil: z.object({
+        id: z.string(),
+        usuarioId: z.string(),
+        nombre: z.string(),
+        apellidoPaterno: z.string().nullable(),
+        apellidoMaterno: z.string().nullable(),
+        telefono: z.string().nullable(),
+        tipoDocumentoIdentidad: z.string().nullable(),
+        numeroDocumento: z.string().nullable(),
+        fechaNacimiento: z.string().nullable(),
+        genero: z.string().nullable(),
+        ciudad: z.string().nullable(),
+        pais: z.string().nullable(),
+        ocupacion: z.string().nullable(),
+        contactoEmergenciaNombre: z.string().nullable(),
+        contactoEmergenciaTelefono: z.string().nullable(),
+        fotografiaRuta: z.string().nullable(),
+        creadoEn: z.string(),
+        actualizadoEn: z.string(),
+    }).nullable(),
+
+    roles: z.array(
+        z.object({
+            rol: z.object({
+                id: z.string(),
+                nombre: z.string(),
+            }),
+        })
+    ),
+});
+
+export type MiPerfilType = z.infer<typeof MiPerfilSchema>;
+
+export const UpdateMiPerfilSchema = z.object({
+    correo: z.string().email("Formato de correo inválido").optional(),
+
+    nombre: z
+        .string()
+        .min(1, "El nombre es obligatorio")
+        .optional(),
+
+    apellidoPaterno: z
+        .string()
+        .min(1, "El apellido paterno es obligatorio")
+        .optional(),
+
+    apellidoMaterno: z
+        .string()
+        .min(1, "El apellido materno es obligatorio")
+        .optional(),
+
+    tipoDocumentoIdentidad: z.string().optional(),
+
+    numeroDocumento: z.string().optional(),
+
+    fechaNacimiento: z.string().optional(),
+
+    genero: z.string().optional(),
+
+    telefono: z.string().optional(),
+
+    ciudad: z.string().optional(),
+
+    pais: z.string().optional(),
+
+    ocupacion: z.string().optional(),
+
+    contactoEmergenciaNombre: z.string().optional(),
+
+    contactoEmergenciaTelefono: z.string().optional(),
+});
+
+export type UpdateMiPerfilType = z.infer<typeof UpdateMiPerfilSchema>;
+
+export const CambiarMiPasswordSchema = z
+    .object({
+        passwordActual: z.string().min(1, "La contraseña actual es obligatoria"),
+
+        passwordNueva: z.string().min(8, "La nueva contraseña debe tener al menos 8 caracteres"),
+
+        confirmarPassword: z.string().min(1, "Confirma tu nueva contraseña"),
+    })
+    .refine(
+        (data) => data.passwordNueva === data.confirmarPassword,
+        {
+            message: "Las contraseñas no coinciden",
+            path: ["confirmarPassword"],
+        }
+    );
+
+export type CambiarMiPasswordType = z.infer<
+    typeof CambiarMiPasswordSchema
+>;

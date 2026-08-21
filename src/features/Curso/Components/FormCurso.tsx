@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 import { FieldGroup } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/common/form/FormField";
+import { ImageUpload } from "@/components/common/form/ImageUpload";
 import {
     CursoCreateSchema,
     CursoCreateType,
@@ -47,8 +48,8 @@ export function FormCurso({ initialData, mode, onSuccess }: FormCursoProps) {
                     descripcionCorta: initialData?.descripcionCorta ?? "",
                     descripcionCompleta: initialData?.descripcionCompleta ?? "",
                     duracionHoras: initialData?.duracionHoras ?? undefined,
-                    rutaPortada: initialData?.rutaPortada ?? "",
-                    rutaImagenSecundaria: initialData?.rutaImagenSecundaria ?? "",
+                    portada: undefined,
+                    imagenSecundaria: undefined,
                     estado: initialData?.estado ?? "publicado",
                     creadoPor: usuario?.id ?? "",
                 }
@@ -59,8 +60,8 @@ export function FormCurso({ initialData, mode, onSuccess }: FormCursoProps) {
                     descripcionCorta: "",
                     descripcionCompleta: "",
                     duracionHoras: undefined,
-                    rutaPortada: "",
-                    rutaImagenSecundaria: "",
+                    portada: undefined,
+                    imagenSecundaria: undefined,
                     estado: "publicado",
                     creadoPor: "",
                 },
@@ -137,20 +138,20 @@ export function FormCurso({ initialData, mode, onSuccess }: FormCursoProps) {
                     />
                 </div>
 
-                <FormField
+                <ImageUpload
                     control={form.control}
-                    name="rutaPortada"
+                    name="portada"
                     label="Imagen de portada"
-                    placeholder="/uploads/cursos/curso.jpg"
-                    hint="Ruta de la imagen principal del curso."
+                    existingImage={initialData?.rutaPortada}
+                    hint="Imagen principal del curso."
                 />
 
-                <FormField
+                <ImageUpload
                     control={form.control}
-                    name="rutaImagenSecundaria"
+                    name="imagenSecundaria"
                     label="Imagen secundaria"
-                    placeholder="/uploads/cursos/curso-secundaria.jpg"
-                    hint="Ruta de una imagen adicional para el curso."
+                    existingImage={initialData?.rutaImagenSecundaria}
+                    hint="Imagen adicional para el curso."
                 />
             </FieldGroup>
 
