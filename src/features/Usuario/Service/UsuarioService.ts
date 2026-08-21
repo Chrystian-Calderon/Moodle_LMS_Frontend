@@ -1,6 +1,6 @@
 import { apiService } from "@/api/api";
 import { ResponseType } from "@/utils/Schema/Response";
-import { UserCreateType, UserIndexResponseType, UserUpdateType, UsuarioDetailType } from "../Schema/UsuarioSchema";
+import { MiPerfilType, UpdateMiPerfilType, UserCreateType, UserIndexResponseType, UserUpdateType, UsuarioDetailType } from "../Schema/UsuarioSchema";
 
 
 export async function GetPaginatedUsers(page: number, limit: number = 10): Promise<UserIndexResponseType> {
@@ -29,5 +29,20 @@ export async function DeleteUserLogically(id: string): Promise<ResponseType> {
 
 export async function SearchUsers(q: string) {
     const response = await apiService.get(`/user/search?q=${encodeURIComponent(q)}`);
+    return response.data;
+}
+
+export async function GetMiPerfil(): Promise<MiPerfilType> {
+    const response = await apiService.get("/user/mi-perfil");
+    return response.data;
+}
+
+export async function UpdateMiPerfil(data: UpdateMiPerfilType): Promise<MiPerfilType> {
+    const response = await apiService.patch("/user/mi-perfil", data);
+    return response.data;
+}
+
+export async function ChangeMyPassword(data: { passwordActual: string; passwordNueva: string; }): Promise<ResponseType> {
+    const response = await apiService.patch("/user/mi-password", data);
     return response.data;
 }

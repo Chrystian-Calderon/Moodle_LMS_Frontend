@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CreateUser, DeleteUserLogically, GetPaginatedUsers, GetUserById, SearchUsers, UpdateUser } from "../Service/UsuarioService";
+import { ChangeMyPassword, CreateUser, DeleteUserLogically, GetMiPerfil, GetPaginatedUsers, GetUserById, SearchUsers, UpdateMiPerfil, UpdateUser } from "../Service/UsuarioService";
 import { UserCreateType, UserUpdateType } from "../Schema/UsuarioSchema";
 
 export function useGetUsers(page: number, limit: number = 10) {
@@ -88,5 +88,43 @@ export function useDeleteUser() {
         onError: () => {
             toast.error("Error al intentar dar de baja al usuario");
         }
+    });
+}
+
+export function useGetMiPerfil() {
+    return useQuery({
+        queryKey: ["users", "mi-perfil"],
+        queryFn: GetMiPerfil,
+        staleTime: 1000 * 60 * 2,
+    });
+}
+
+export function useUpdateMiPerfil() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: UpdateMiPerfil,
+
+        onSuccess: () => {
+            toast.success("Perfil actualizado correctamente");
+            queryClient.invalidateQueries({
+
+            });
+        },
+
+        onError: () => { toast.error("No se pudo actualizar el perfil"); },
+    });
+}
+
+export function useCambiarMiPassword() {
+    return useMutation({
+        mutationFn: ChangeMyPassword,
+
+        onSuccess: (response) => {
+            toast.success(response.message || "Contraseña actualizada correctamente");
+        },
+
+        onError: () => {
+            toast.error("No se pudo cambiar la contraseña");
+        },
     });
 }
