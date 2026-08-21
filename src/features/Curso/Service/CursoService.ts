@@ -51,7 +51,18 @@ export async function GetCourseCategories(): Promise<CategoriasResponseType> {
 }
 
 export async function CreateCurso(data: CursoCreateType): Promise<CursoDetailType> {
-    const response = await apiService.post("/curso", data);
+    console.log("DATA DEL FORMULARIO:", data);
+    console.log("PORTADA:", data.portada);
+    console.log("ES FILE:", data.portada instanceof File);
+
+    const formData = buildCursoFormData(data);
+
+    console.log("FORM DATA:");
+
+    for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
+    const response = await apiService.post("/curso", formData);
     return response.data;
 }
 
@@ -68,4 +79,73 @@ export async function DeleteCurso(id: string): Promise<ResponseType> {
 export async function GetMisCursosInscritos(estudianteId: string): Promise<MisCursoInscritoType[]> {
     const response = await apiService.get(`/inscripciones/estudiante/${estudianteId}`);
     return response.data;
+}
+
+function buildCursoFormData(
+    data: CursoCreateType | CursoUpdateType,
+): FormData {
+    const formData = new FormData();
+
+    if (data.nombre !== undefined) {
+        formData.append("nombre", data.nombre);
+    }
+
+    if (data.categoria !== undefined) {
+        formData.append("categoria", data.categoria);
+    }
+
+    if (data.slug !== undefined) {
+        formData.append("slug", data.slug);
+    }
+
+    if (data.descripcionCorta !== undefined) {
+        formData.append(
+            "descripcionCorta",
+            data.descripcionCorta,
+        );
+    }
+
+    if (data.descripcionCompleta !== undefined) {
+        formData.append(
+            "descripcionCompleta",
+            data.descripcionCompleta,
+        );
+    }
+
+    if (data.estado !== undefined) {
+        formData.append("estado", data.estado);
+    }
+
+    if (
+        data.duracionHoras !== undefined &&
+        data.duracionHoras !== null
+    ) {
+        formData.append(
+            "duracionHoras",
+            String(data.duracionHoras),
+        );
+    }
+
+    if (data.creadoPor !== undefined) {
+        formData.append(
+            "creadoPor",
+            data.creadoPor,
+        );
+    }
+
+    if (data.portada instanceof File) {
+        formData.append(
+            "rutaPortada",
+            data.portada,
+        );
+    }
+
+    if (data.imagenSecundaria instanceof File) {
+        formData.append(
+            "rutaImagenSecundaria",
+            data.imagenSecundaria,
+        );
+    }
+
+    return formData;
 }
