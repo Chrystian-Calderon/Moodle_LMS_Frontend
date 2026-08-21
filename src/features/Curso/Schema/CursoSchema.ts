@@ -51,3 +51,24 @@ export type CursoCreateType = z.infer<typeof CursoCreateSchema>;
 export const CursoUpdateSchema = CursoCreateSchema.partial();
 
 export type CursoUpdateType = z.infer<typeof CursoUpdateSchema>;
+
+export const MisCursoModuloSchema = z.object({
+    id: z.string(),
+    nombre: z.string(),
+    orden: z.number(),
+    estado: z.string(),
+    estadoAcceso: z.string(),
+    porcentajeAvance: z.number(),
+    numeroInscripcion: z.string(),
+});
+
+export type MisCursoModuloType = z.infer<typeof MisCursoModuloSchema>;
+
+export const MisCursoInscritoSchema = z.object({
+    id: z.string(),
+    nombre: z.string(),
+    categoria: z.string(),
+    modulos: z.array(MisCursoModuloSchema),
+});
+
+export type MisCursoInscritoType = z.infer<typeof MisCursoInscritoSchema>;

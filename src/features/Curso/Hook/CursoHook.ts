@@ -4,6 +4,7 @@ import {
     DeleteCurso,
     GetCourseById,
     GetCourseCategories,
+    GetMisCursosInscritos,
     GetPaginatedCourses,
     UpdateCurso,
 } from "../Service/CursoService";
@@ -66,5 +67,13 @@ export function useDeleteCurso() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["cursos"] });
         },
+    });
+}
+
+export function useMisCursosInscritos(estudianteId: string) {
+    return useQuery({
+        queryKey: ["mis-cursos-inscritos", estudianteId],
+        queryFn: () => GetMisCursosInscritos(estudianteId),
+        enabled: !!estudianteId,
     });
 }
