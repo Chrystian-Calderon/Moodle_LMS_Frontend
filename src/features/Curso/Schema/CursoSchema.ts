@@ -39,8 +39,9 @@ export const CursoCreateSchema = z.object({
     descripcionCorta: z.string().optional(),
     descripcionCompleta: z.string().optional(),
     duracionHoras: z.number().int().min(1, "La duración debe ser mayor a 0").optional(),
-    rutaPortada: z.string().optional(),
-    rutaImagenSecundaria: z.string().optional(),
+    portada: z.instanceof(File).optional(),
+    imagenSecundaria: z.instanceof(File).optional(),
+
     estado: z.string().optional(),
     creadoPor: z.string().optional(),
 });
