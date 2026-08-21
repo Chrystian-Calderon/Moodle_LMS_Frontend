@@ -6,6 +6,7 @@ import {
     CursoType,
     CursoUpdateType,
     CursosResponseType,
+    MisCursoInscritoType,
 } from "../Schema/CursoSchema";
 
 interface GetCursosParams {
@@ -61,5 +62,10 @@ export async function UpdateCurso(id: string, data: CursoUpdateType): Promise<Cu
 
 export async function DeleteCurso(id: string): Promise<ResponseType> {
     const response = await apiService.delete(`/curso/${id}`);
+    return response.data;
+}
+
+export async function GetMisCursosInscritos(estudianteId: string): Promise<MisCursoInscritoType[]> {
+    const response = await apiService.get(`/inscripciones/estudiante/${estudianteId}`);
     return response.data;
 }
