@@ -11,6 +11,7 @@ import UsuarioPage from "@/pages/Usuario/UsuarioPage";
 import UsuarioDetallePage from "@/pages/Usuario/UsuarioDetallePage";
 import CursosPage from "@/pages/Curso/CursoPage";
 import CursoDetallePage from "@/pages/Curso/CursoDetallePage";
+import MisCursosPage from "@/pages/Curso/MisCursosPage";
 import ModulosPage from "@/pages/Modulo/ModuloPage";
 import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
 import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage";
@@ -56,6 +57,7 @@ export const router = createBrowserRouter([
                             { path: "usuario", element: <UsuarioPage /> },
                             { path: "usuario/:id", element: <UsuarioDetallePage /> },
                             { path: "cursos", element: <CursosPage /> },
+                            { path: "mis-cursos", element: <MisCursosPage /> },
                             { path: "cursos/:id", element: <CursoDetallePage /> },
                             { path: "cursos/:id/modulos", element: <ModulosPage /> },
                             { path: "cursos/:id/modulos/:moduloId", element: <ModuloDetallePage /> },

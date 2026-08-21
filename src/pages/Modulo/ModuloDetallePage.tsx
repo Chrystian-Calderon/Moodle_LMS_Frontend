@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { ArrowLeft, BadgeCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,8 @@ import { useGetModulo } from "@/features/Modulo/Hook/ModuloHook";
 export default function ModuloDetallePage() {
     const { id: cursoId, moduloId } = useParams<{ id: string; moduloId: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = (location.state as { from?: string })?.from ?? "cursos";
 
     const { data: modulo, isLoading, isError, error } = useGetModulo(moduloId!);
 
@@ -52,11 +54,11 @@ export default function ModuloDetallePage() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate(`/cursos/${cursoId}`)}
+                onClick={() => from === "mis-cursos" ? navigate("/mis-cursos") : navigate(`/cursos/${cursoId}`, { state: { from } })}
                 className="gap-1 px-0"
             >
                 <ArrowLeft className="h-4 w-4" />
-                Volver al curso
+                {from === "mis-cursos" ? "Volver a mis cursos" : "Volver al curso"}
             </Button>
 
             <QueryState isLoading={isLoading} isError={isError} error={error} fallbackMessage="No se pudo cargar el módulo.">
