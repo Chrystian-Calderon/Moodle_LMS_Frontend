@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
     CreateCurso,
     DeleteCurso,
@@ -8,6 +9,7 @@ import {
     GetPaginatedCourses,
     UpdateCurso,
 } from "../Service/CursoService";
+
 import { CursoCreateType, CursoUpdateType } from "../Schema/CursoSchema";
 
 export function useCursos(
@@ -41,31 +43,56 @@ export function useCategoriasCursos() {
 
 export function useCreateCurso() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: (data: CursoCreateType) => CreateCurso(data),
+
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cursos"] });
+            queryClient.invalidateQueries({
+                queryKey: ["cursos"],
+            });
         },
     });
 }
 
 export function useUpdateCurso() {
     const queryClient = useQueryClient();
+
     return useMutation({
-        mutationFn: ({ id, data }: { id: string; data: CursoUpdateType }) => UpdateCurso(id, data),
+        mutationFn: ({
+            id,
+            data,
+        }: {
+            id: string;
+            data: CursoUpdateType;
+        }) => UpdateCurso(id, data),
+
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ["cursos"] });
-            queryClient.invalidateQueries({ queryKey: ["curso", variables.id] });
+            queryClient.invalidateQueries({
+                queryKey: ["cursos"],
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["curso", variables.id],
+            });
         },
     });
 }
 
 export function useDeleteCurso() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: (id: string) => DeleteCurso(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["cursos"] });
+
+        onSuccess: (_, id) => {
+            queryClient.invalidateQueries({
+                queryKey: ["cursos"],
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["curso", id],
+            });
         },
     });
 }

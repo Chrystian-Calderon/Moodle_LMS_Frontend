@@ -101,17 +101,21 @@ export function useGetMiPerfil() {
 
 export function useUpdateMiPerfil() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: UpdateMiPerfil,
 
         onSuccess: () => {
             toast.success("Perfil actualizado correctamente");
-            queryClient.invalidateQueries({
 
+            queryClient.invalidateQueries({
+                queryKey: ["users", "mi-perfil"],
             });
         },
 
-        onError: () => { toast.error("No se pudo actualizar el perfil"); },
+        onError: () => {
+            toast.error("No se pudo actualizar el perfil");
+        },
     });
 }
 

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+
 import {
     CrearInscripcion,
     ObtenerCursos,
@@ -12,12 +13,21 @@ import {
 
 export function useCrearInscripcion() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: CrearInscripcion,
+
         onSuccess: () => {
             toast.success("Inscripción creada exitosamente");
+
+            queryClient.invalidateQueries({
+                queryKey: ["inscripciones", "list"],
+            });
+
             navigate("/inscripciones");
         },
+
         onError: () => {
             toast.error("Error al crear la inscripción");
         },
@@ -48,13 +58,24 @@ export function useEstudiantes() {
 
 export function useEliminarCurso() {
     const queryClient = useQueryClient();
+
     return useMutation({
-        mutationFn: ({ inscripcionId, cursoId }: { inscripcionId: string; cursoId: string }) =>
-            EliminarCursoInscripcion(inscripcionId, cursoId),
+        mutationFn: ({
+            inscripcionId,
+            cursoId,
+        }: {
+            inscripcionId: string;
+            cursoId: string;
+        }) => EliminarCursoInscripcion(inscripcionId, cursoId),
+
         onSuccess: () => {
             toast.success("Curso eliminado exitosamente");
-            queryClient.invalidateQueries({ queryKey: ["inscripciones"] });
+
+            queryClient.invalidateQueries({
+                queryKey: ["inscripciones", "list"],
+            });
         },
+
         onError: () => {
             toast.error("Error al eliminar el curso");
         },
@@ -63,13 +84,26 @@ export function useEliminarCurso() {
 
 export function useEliminarModulo() {
     const queryClient = useQueryClient();
+
     return useMutation({
-        mutationFn: ({ inscripcionId, cursoId, moduloId }: { inscripcionId: string; cursoId: string; moduloId: string }) =>
-            EliminarModuloInscripcion(inscripcionId, cursoId, moduloId),
+        mutationFn: ({
+            inscripcionId,
+            cursoId,
+            moduloId,
+        }: {
+            inscripcionId: string;
+            cursoId: string;
+            moduloId: string;
+        }) => EliminarModuloInscripcion(inscripcionId, cursoId, moduloId),
+
         onSuccess: () => {
             toast.success("Módulo eliminado exitosamente");
-            queryClient.invalidateQueries({ queryKey: ["inscripciones"] });
+
+            queryClient.invalidateQueries({
+                queryKey: ["inscripciones", "list"],
+            });
         },
+
         onError: () => {
             toast.error("Error al eliminar el módulo");
         },
