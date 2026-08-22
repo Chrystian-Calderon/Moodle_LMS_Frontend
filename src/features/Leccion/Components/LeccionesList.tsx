@@ -1,7 +1,7 @@
-import { Loader2 } from "lucide-react";
 import { LeccionItem } from "./LeccionCard";
 import { LeccionListItemType } from "../Schema/LeccionSchema";
 import { useGetLecciones } from "../Hook/LeccionHook";
+import { QueryState } from "@/components/common/QueryState";
 
 interface LeccionesListProps {
     moduloId: string;
@@ -20,46 +20,51 @@ export function LeccionesList({
     puedeEditar = false,
     puedeEliminar = false,
 }: LeccionesListProps) {
-    const { data: lecciones, isLoading, isError } = useGetLecciones(moduloId, {
+    const {
+        data: lecciones,
+        isLoading,
+        isError,
+        error,
+    } = useGetLecciones(moduloId, {
         nombre: search || undefined,
     });
 
-    if (isLoading) {
-        return (
-            <div className="flex min-h-[200px] items-center justify-center">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="flex min-h-[200px] items-center justify-center">
-                <p className="text-sm text-destructive">No se pudieron cargar las lecciones.</p>
-            </div>
-        );
-    }
-
     if (!lecciones || lecciones.length === 0) {
         return (
-            <div className="flex min-h-[200px] items-center justify-center rounded-xl border bg-muted/20">
-                <p className="text-sm text-muted-foreground">No hay lecciones que coincidan con tu búsqueda.</p>
-            </div>
+            <QueryState
+                isLoading={isLoading}
+                isError={isError}
+                error={error}
+                minHeight="min-h-[200px]"
+            >
+                <div className="flex min-h-[200px] items-center justify-center rounded-xl border bg-muted/20">
+                    <p className="text-sm text-muted-foreground">
+                        No hay lecciones que coincidan con tu búsqueda.
+                    </p>
+                </div>
+            </QueryState>
         );
     }
 
     return (
-        <div className="space-y-3">
-            {lecciones.map((leccion) => (
-                <LeccionItem
-                    key={leccion.id}
-                    leccion={leccion}
-                    onEditar={onEditar}
-                    onEliminar={onEliminar}
-                    puedeEditar={puedeEditar}
-                    puedeEliminar={puedeEliminar}
-                />
-            ))}
-        </div>
+        <QueryState
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
+            minHeight="min-h-[200px]"
+        >
+            <div className="space-y-3">
+                {lecciones.map((leccion) => (
+                    <LeccionItem
+                        key={leccion.id}
+                        leccion={leccion}
+                        onEditar={onEditar}
+                        onEliminar={onEliminar}
+                        puedeEditar={puedeEditar}
+                        puedeEliminar={puedeEliminar}
+                    />
+                ))}
+            </div>
+        </QueryState>
     );
 }

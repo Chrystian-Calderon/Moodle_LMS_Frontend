@@ -12,6 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useCreateRecursoLeccion, useDeleteRecursoLeccion, useGetRecursosLeccion } from "../Hook/LeccionHook";
+import { QueryState } from "@/components/common/QueryState";
 
 
 interface RecursosLeccionManagerProps {
@@ -25,7 +26,13 @@ const TIPOS = [
 ];
 
 export function RecursosLeccionManager({ leccionId }: RecursosLeccionManagerProps) {
-    const { data: recursos, isLoading } = useGetRecursosLeccion(leccionId);
+    const {
+        data: recursos,
+        isLoading,
+        isError,
+        error,
+    } = useGetRecursosLeccion(leccionId);
+
     const { mutate: crear, isPending: creando } = useCreateRecursoLeccion();
     const { mutate: eliminar } = useDeleteRecursoLeccion();
 
@@ -51,36 +58,41 @@ export function RecursosLeccionManager({ leccionId }: RecursosLeccionManagerProp
         <div className="space-y-3 rounded-lg border bg-muted/10 p-4">
             <p className="text-sm font-medium">Recursos</p>
 
-            {isLoading ? (
-                <p className="text-xs text-muted-foreground">Cargando recursos...</p>
-            ) : recursos && recursos.length > 0 ? (
-                <div className="space-y-1.5">
-                    {recursos.map((recurso) => {
-                        const Icono = TIPOS.find((t) => t.value === recurso.tipoRecurso)?.icon ?? FileText;
+            <QueryState
+                isLoading={isLoading}
+                isError={isError}
+                error={error}
+                minHeight="min-h-[50px]"
+            >
+                {recursos && recursos.length > 0 ? (
+                    <div className="space-y-1.5">
+                        {recursos.map((recurso) => {
+                            const Icono = TIPOS.find((t) => t.value === recurso.tipoRecurso)?.icon ?? FileText;
 
-                        return (
-                            <div key={recurso.id} className="flex items-center justify-between gap-2 rounded-md bg-background px-3 py-2 text-sm">
-                                <div className="flex min-w-0 items-center gap-2">
-                                    <Icono className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                                    <span className="truncate">{recurso.nombre}</span>
+                            return (
+                                <div key={recurso.id} className="flex items-center justify-between gap-2 rounded-md bg-background px-3 py-2 text-sm">
+                                    <div className="flex min-w-0 items-center gap-2">
+                                        <Icono className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                                        <span className="truncate">{recurso.nombre}</span>
+                                    </div>
+
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-7 w-7 shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                                        onClick={() => eliminar(recurso.id)}
+                                    >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
                                 </div>
-
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-7 w-7 shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                                    onClick={() => eliminar(recurso.id)}
-                                >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                </Button>
-                            </div>
-                        );
-                    })}
-                </div>
-            ) : (
-                <p className="text-xs text-muted-foreground">Sin recursos aún.</p>
-            )}
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <p className="text-xs text-muted-foreground">Sin recursos aún.</p>
+                )}
+            </QueryState>
 
             <div className="grid grid-cols-1 gap-2 border-t pt-3 sm:grid-cols-[1fr_120px_1fr_auto]">
                 <Input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre del recurso" className="h-9" />
