@@ -15,14 +15,10 @@ apiService.interceptors.request.use((config) => {
     return config;
 });
 
-let isRedirectingToLogin = false;
-
 apiService.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401 && !isRedirectingToLogin) {
-            isRedirectingToLogin = true;
-
+        if (error.response?.status === 401) {
             useAuthStore.getState().logout();
 
             window.location.href = "/login";
