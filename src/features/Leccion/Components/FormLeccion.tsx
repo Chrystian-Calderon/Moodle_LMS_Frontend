@@ -1,18 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { FieldGroup } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+
 import {
     LeccionCreateSchema,
     LeccionCreateType,
@@ -20,8 +12,14 @@ import {
     LeccionUpdateType,
     LeccionDetailType,
 } from "../Schema/LeccionSchema";
-import { useCreateLeccion, useGetLecciones, useUpdateLeccion } from "../Hook/LeccionHook";
-import { RichTextEditor } from "@/components/common/RichTextEditor";
+
+import {
+    useCreateLeccion,
+    useGetLecciones,
+    useUpdateLeccion,
+} from "../Hook/LeccionHook";
+
+import { FormField } from "@/components/common/form/FormField";
 import { useEffect } from "react";
 
 type FormValues = LeccionCreateType | LeccionUpdateType;
@@ -33,15 +31,22 @@ type FormLeccionProps = {
     onSuccess?: () => void;
 };
 
-export function FormLeccion({ initialData, mode, moduloId, onSuccess }: FormLeccionProps) {
+export function FormLeccion({ initialData, mode, moduloId, onSuccess, }: FormLeccionProps) {
     const { data: leccionesExistentes } = useGetLecciones(moduloId);
-    const { mutate: createLeccion, isPending: creating } = useCreateLeccion();
-    const { mutate: updateLeccion, isPending: updating } = useUpdateLeccion();
+
+    const { mutate: createLeccion, isPending: creating, } = useCreateLeccion();
+
+    const { mutate: updateLeccion, isPending: updating, } = useUpdateLeccion();
 
     const isPending = creating || updating;
 
     const form = useForm<FormValues>({
-        resolver: zodResolver(mode === "edit" ? LeccionUpdateSchema : LeccionCreateSchema),
+        resolver: zodResolver(
+            mode === "edit"
+                ? LeccionUpdateSchema
+                : LeccionCreateSchema
+        ),
+
         defaultValues:
             mode === "edit"
                 ? {
@@ -53,8 +58,10 @@ export function FormLeccion({ initialData, mode, moduloId, onSuccess }: FormLecc
                     proveedorVideo: initialData?.proveedorVideo ?? "",
                     orden: initialData?.orden ?? 0,
                     esVistaPrevia: initialData?.esVistaPrevia ?? false,
-                    requiereLeccionAnteriorCompletada: initialData?.requiereLeccionAnteriorCompletada ?? true,
-                    estaPublicada: initialData?.estaPublicada ?? true,
+                    requiereLeccionAnteriorCompletada:
+                        initialData?.requiereLeccionAnteriorCompletada ?? true,
+                    estaPublicada:
+                        initialData?.estaPublicada ?? true,
                 }
                 : {
                     moduloId,
@@ -73,194 +80,148 @@ export function FormLeccion({ initialData, mode, moduloId, onSuccess }: FormLecc
 
     const onSubmit = (values: FormValues) => {
         if (mode === "edit") {
-            updateLeccion({ id: initialData!.id, data: values }, { onSuccess: () => onSuccess?.() });
+            updateLeccion({ id: initialData!.id, data: values, },
+                { onSuccess: () => onSuccess?.(), }
+            );
             return;
         }
 
-        createLeccion(
-            { ...values, moduloId } as LeccionCreateType,
-            { onSuccess: () => { form.reset(); onSuccess?.(); } },
+        createLeccion({ ...values, moduloId, } as LeccionCreateType,
+            {
+                onSuccess: () => { form.reset(); onSuccess?.(); },
+            }
         );
     };
 
     useEffect(() => {
-        if (mode === "create" && leccionesExistentes && !form.formState.dirtyFields.orden) {
-            form.setValue("orden", leccionesExistentes.length + 1);
+        if (
+            mode === "create" &&
+            leccionesExistentes &&
+            !form.formState.dirtyFields.orden
+        ) {
+            form.setValue(
+                "orden",
+                leccionesExistentes.length + 1
+            );
         }
     }, [mode, leccionesExistentes]);
 
-
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+        >
             <FieldGroup>
-                <Controller
+                <FormField
+                    control={form.control}
                     name="nombre"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel>Nombre</FieldLabel>
-                            <Input {...field} value={field.value ?? ""} placeholder="Ej: Presente simple" />
-                            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                        </Field>
-                    )}
+                    label="Nombre"
+                    placeholder="Ej: Presente simple"
                 />
 
-                <Controller
+                <FormField
+                    control={form.control}
                     name="descripcion"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel>Descripción</FieldLabel>
-                            <Textarea {...field} value={field.value ?? ""} placeholder="Descripción breve" rows={2} />
-                            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                        </Field>
-                    )}
+                    label="Descripción"
+                    type="textarea"
+                    placeholder="Descripción breve"
+                    rows={2}
                 />
 
-                <Controller
-                    name="contenidoHtml"
+                <FormField
                     control={form.control}
-                    render={({ field }) => (
-                        <Field>
-                            <FieldLabel>Contenido</FieldLabel>
-                            <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
-                        </Field>
-                    )}
+                    name="contenidoHtml"
+                    label="Contenido"
+                    type="richtext"
                 />
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <Controller
-                        name="tipoLeccion"
+                    <FormField
                         control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Tipo</FieldLabel>
-                                <Select value={field.value} onValueChange={field.onChange}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccionar tipo" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="video">Video</SelectItem>
-                                        <SelectItem value="lectura">Lectura</SelectItem>
-                                        <SelectItem value="html">HTML</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                            </Field>
-                        )}
+                        name="tipoLeccion"
+                        label="Tipo"
+                        type="select"
+                        options={[
+                            {
+                                value: "video",
+                                label: "Video",
+                            },
+                            {
+                                value: "lectura",
+                                label: "Lectura",
+                            },
+                            {
+                                value: "html",
+                                label: "HTML",
+                            },
+                        ]}
                     />
 
-                    <Controller
-                        name="orden"
+                    <FormField
                         control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Orden</FieldLabel>
-                                <Input
-                                    type="number"
-                                    min={1}
-                                    value={field.value ?? 1}
-                                    onChange={(e) => field.onChange(Number(e.target.value))}
-                                />
-                                <p className="text-xs text-muted-foreground">
-                                    Si eliges una posición ya ocupada, las demás lecciones se recorren automáticamente.
-                                </p>
-                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                            </Field>
-                        )}
+                        name="orden"
+                        label="Orden"
+                        type="number"
+                        min={1}
+                        hint="Si eliges una posición ya ocupada, las demás lecciones se recorren automáticamente."
                     />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <Controller
-                        name="urlVideo"
+                    <FormField
                         control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>URL del video</FieldLabel>
-                                <Input {...field} value={field.value ?? ""} placeholder="https://..." />
-                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                            </Field>
-                        )}
+                        name="urlVideo"
+                        label="URL del video"
+                        placeholder="https://..."
                     />
 
-                    <Controller
-                        name="proveedorVideo"
+                    <FormField
                         control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Proveedor de video</FieldLabel>
-                                <Input {...field} value={field.value ?? ""} placeholder="Ej: YouTube, Vimeo" />
-                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                            </Field>
-                        )}
+                        name="proveedorVideo"
+                        label="Proveedor de video"
+                        placeholder="Ej: YouTube, Vimeo"
                     />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <Controller
+                    <FormField
+                        control={form.control}
                         name="esVistaPrevia"
-                        control={form.control}
-                        render={({ field }) => (
-                            <Field>
-                                <FieldLabel>Vista previa</FieldLabel>
-                                <label className="flex h-9 items-center gap-2 text-sm">
-                                    <input
-                                        type="checkbox"
-                                        checked={field.value ?? false}
-                                        onChange={(e) => field.onChange(e.target.checked)}
-                                        className="h-4 w-4 rounded border-border"
-                                    />
-                                    Visible sin inscripción
-                                </label>
-                            </Field>
-                        )}
+                        label="Vista previa"
+                        type="checkbox"
+                        description="Visible sin inscripción"
                     />
 
-                    <Controller
+                    <FormField
+                        control={form.control}
                         name="requiereLeccionAnteriorCompletada"
-                        control={form.control}
-                        render={({ field }) => (
-                            <Field>
-                                <FieldLabel>Secuencial</FieldLabel>
-                                <label className="flex h-9 items-center gap-2 text-sm">
-                                    <input
-                                        type="checkbox"
-                                        checked={field.value ?? true}
-                                        onChange={(e) => field.onChange(e.target.checked)}
-                                        className="h-4 w-4 rounded border-border"
-                                    />
-                                    Requiere anterior
-                                </label>
-                            </Field>
-                        )}
+                        label="Secuencial"
+                        type="checkbox"
+                        description="Requiere anterior"
                     />
 
-                    <Controller
-                        name="estaPublicada"
+                    <FormField
                         control={form.control}
-                        render={({ field }) => (
-                            <Field>
-                                <FieldLabel>Publicada</FieldLabel>
-                                <label className="flex h-9 items-center gap-2 text-sm">
-                                    <input
-                                        type="checkbox"
-                                        checked={field.value ?? true}
-                                        onChange={(e) => field.onChange(e.target.checked)}
-                                        className="h-4 w-4 rounded border-border"
-                                    />
-                                    Visible a estudiantes
-                                </label>
-                            </Field>
-                        )}
+                        name="estaPublicada"
+                        label="Publicada"
+                        type="checkbox"
+                        description="Visible a estudiantes"
                     />
                 </div>
             </FieldGroup>
 
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button
+                type="submit"
+                className="w-full"
+                disabled={isPending}
+            >
                 {isPending
-                    ? mode === "edit" ? "Guardando..." : "Creando..."
-                    : mode === "edit" ? "Guardar cambios" : "Crear lección"}
+                    ? mode === "edit"
+                        ? "Guardando..."
+                        : "Creando..."
+                    : mode === "edit"
+                        ? "Guardar cambios"
+                        : "Crear lección"}
             </Button>
         </form>
     );

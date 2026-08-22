@@ -13,6 +13,7 @@ import {
     ModuloDetailType,
 } from "../Schema/ModuloSchema";
 import { useCreateModulo, useUpdateModulo } from "../Hook/ModuloHook";
+import { ImageUpload } from "@/components/common/form/ImageUpload";
 
 type FormValues = ModuloCreateType | ModuloUpdateType;
 
@@ -37,7 +38,7 @@ export function FormModulo({ initialData, mode, cursoId, onSuccess }: FormModulo
                     nombre: initialData?.nombre ?? "",
                     descripcion: initialData?.descripcion ?? "",
                     fraseMotivacional: initialData?.fraseMotivacional ?? "",
-                    rutaImagen: initialData?.rutaImagen ?? "",
+                    rutaImagen: undefined,
                     orden: initialData?.orden ?? 0,
                     otorgaCertificacion: initialData?.otorgaCertificacion ?? false,
                     estaPublicado: initialData?.estaPublicado ?? true,
@@ -47,7 +48,7 @@ export function FormModulo({ initialData, mode, cursoId, onSuccess }: FormModulo
                     nombre: "",
                     descripcion: "",
                     fraseMotivacional: "",
-                    rutaImagen: "",
+                    rutaImagen: undefined,
                     orden: 0,
                     otorgaCertificacion: false,
                     estaPublicado: true,
@@ -88,7 +89,17 @@ export function FormModulo({ initialData, mode, cursoId, onSuccess }: FormModulo
                 />
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <FormField control={form.control} name="rutaImagen" label="Imagen (URL)" placeholder="https://..." />
+                    <ImageUpload
+                        control={form.control}
+                        name="rutaImagen"
+                        label="Imagen del módulo"
+                        existingImage={
+                            mode === "edit"
+                                ? initialData?.rutaImagen
+                                : null
+                        }
+                        hint="JPG, PNG o WEBP · máximo 5 MB"
+                    />
 
                     <FormField type="number" control={form.control} name="orden" label="Orden" min={0} />
                 </div>

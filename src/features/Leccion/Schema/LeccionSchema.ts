@@ -18,10 +18,11 @@ export const RecursoLeccionCreateSchema = z.object({
     nombre: z.string().min(1, "El nombre es obligatorio"),
     descripcion: z.string().optional(),
     tipoRecurso: z.string().min(1, "El tipo de recurso es obligatorio"),
-    rutaRecurso: z.string().optional(),
     urlExterna: z.string().optional(),
     orden: z.number().int().min(0).optional(),
+    archivo: z.instanceof(File).optional(),
 });
+
 export type RecursoLeccionCreateType = z.infer<typeof RecursoLeccionCreateSchema>;
 
 export const RecursoLeccionUpdateSchema = RecursoLeccionCreateSchema.partial();

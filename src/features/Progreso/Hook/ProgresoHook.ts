@@ -6,12 +6,12 @@ export function useProgresoQuery(moduloId: string) {
         queryKey: ["progreso", moduloId],
         queryFn: () => getProgresoByModuloId(moduloId),
         enabled: !!moduloId,
-    })
+    });
 }
 
 export function useProgresoMeQuery() {
     return useQuery({
         queryKey: ["progreso", "me"],
         queryFn: () => getProgresoMe(),
-    })
+    });
 }

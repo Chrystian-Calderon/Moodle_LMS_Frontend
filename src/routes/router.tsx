@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import RootLayout from "@/layouts/RootLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -22,8 +22,6 @@ import ProfilePage from "@/pages/Profile/ProfilePage";
 
 const Loading = () => <div>Cargando...</div>;
 
-
-
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -33,10 +31,17 @@ export const router = createBrowserRouter([
             </Suspense>
         ),
         children: [
+            // / -> /login
+            {
+                index: true,
+                element: <Navigate to="/login" replace />,
+            },
+
             {
                 path: "login",
                 element: <AuthPage />,
             },
+
             {
                 element: <ProtectedRoute />,
                 children: [
@@ -62,7 +67,7 @@ export const router = createBrowserRouter([
                             { path: "cursos/:id/modulos", element: <ModulosPage /> },
                             { path: "cursos/:id/modulos/:moduloId", element: <ModuloDetallePage /> },
                             {
-                                path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId", // 👈 nuevo
+                                path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId",
                                 element: <LeccionDetallePage />,
                             },
                             { path: "inscripciones", element: <InscripcionesPage /> },

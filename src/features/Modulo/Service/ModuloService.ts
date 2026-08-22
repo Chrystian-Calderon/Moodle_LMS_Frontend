@@ -7,6 +7,7 @@ import {
     ModulosCursoResponseType,
     ModuloDetailType,
 } from "../Schema/ModuloSchema";
+import { buildFormData } from "@/utils/buildFormData";
 
 type ModuloFiltros = {
     nombre?: string;
@@ -59,12 +60,32 @@ export async function GetModuloById(id: string): Promise<ModuloDetailType> {
 }
 
 export async function CreateModulo(data: ModuloCreateType): Promise<ResponseType> {
-    const response = await apiService.post("/modulos", data);
+    const formData = buildFormData({
+        cursoId: data.cursoId,
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        fraseMotivacional: data.fraseMotivacional,
+        rutaImagen: data.rutaImagen,
+        orden: data.orden,
+        otorgaCertificacion: data.otorgaCertificacion,
+        estaPublicado: data.estaPublicado,
+    });
+    const response = await apiService.post("/modulos", formData);
     return response.data;
 }
 
 export async function UpdateModulo(id: string, data: ModuloUpdateType): Promise<ResponseType> {
-    const response = await apiService.patch(`/modulos/${id}`, data);
+    const formData = buildFormData({
+        cursoId: data.cursoId,
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        fraseMotivacional: data.fraseMotivacional,
+        rutaImagen: data.rutaImagen,
+        orden: data.orden,
+        otorgaCertificacion: data.otorgaCertificacion,
+        estaPublicado: data.estaPublicado,
+    });
+    const response = await apiService.patch(`/modulos/${id}`, formData);
     return response.data;
 }
 

@@ -11,6 +11,7 @@ import {
     RecursoLeccionType,
     FormularioLeccionPublicoType,
 } from "../Schema/LeccionSchema";
+import { buildFormData } from "@/utils/buildFormData";
 
 export async function GetLeccionesByModulo(
     moduloId: string,
@@ -73,11 +74,9 @@ export async function GetRecursosByLeccion(leccionId: string): Promise<RecursoLe
     return response.data;
 }
 
-export async function CreateRecursoLeccion(
-    leccionId: string,
-    data: RecursoLeccionCreateType
-): Promise<ResponseType> {
-    const response = await apiService.post(`/lecciones/${leccionId}/recursos`, data);
+export async function CreateRecursoLeccion(leccionId: string, data: RecursoLeccionCreateType): Promise<ResponseType> {
+    const formData = buildFormData(data);
+    const response = await apiService.post(`/lecciones/${leccionId}/recursos`, formData);
     return response.data;
 }
 
@@ -86,11 +85,9 @@ export async function GetRecursoLeccionById(id: string): Promise<RecursoLeccionT
     return response.data;
 }
 
-export async function UpdateRecursoLeccion(
-    id: string,
-    data: RecursoLeccionUpdateType
-): Promise<ResponseType> {
-    const response = await apiService.patch(`/recursos-leccion/${id}`, data);
+export async function UpdateRecursoLeccion(id: string, data: RecursoLeccionUpdateType): Promise<ResponseType> {
+    const formData = buildFormData(data);
+    const response = await apiService.patch(`/recursos-leccion/${id}`, formData);
     return response.data;
 }
 
