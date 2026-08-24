@@ -15,19 +15,10 @@ import { useAuthStore } from "@/store/authStore";
 
 export default function AppSidebar() {
     const pathname = useLocation().pathname;
-
-    const backendMenu = useAuthStore(
-        (state) => state.menu
-    );
+    const hasPermission = useAuthStore((state) => state.hasPermission);
 
     const visibleMenuItems = menuItems.filter(
-        (localItem) => {
-            if (localItem.url === "/inicio") {
-                return true;
-            }
-
-            return backendMenu;
-        }
+        (item) => !item.permission || hasPermission(item.permission)
     );
 
     return (
