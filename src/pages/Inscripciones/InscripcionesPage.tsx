@@ -15,7 +15,10 @@ import { useNavigate } from "react-router-dom";
 import { PERMISSIONS } from "@/utils/constants";
 
 export const InscripcionesPage = () => {
-  const { data, isLoading, isError, error } = useGetInscripciones(1, 10);
+  const [page, setPage] = useState(1);
+  const perPage = 10;
+
+  const { data, isLoading, isError, error } = useGetInscripciones(page, perPage);
 
   const navigate = useNavigate();
 
@@ -50,6 +53,9 @@ export const InscripcionesPage = () => {
   });
 
   const inscripciones = data?.data ?? [];
+  const totalPages = data?.meta.totalPages ?? 1;
+  const currentPage = data?.meta.page ?? page;
+  const totalInscripciones = data?.meta.total ?? 0;
 
   return (
     <div className="space-y-6 p-6">
@@ -77,6 +83,10 @@ export const InscripcionesPage = () => {
         <DataTable
           columns={columns}
           data={inscripciones}
+          pageCount={totalPages}
+          pageIndex={currentPage - 1}
+          totalRows={totalInscripciones}
+          onPaginationChange={(newPage) => setPage(newPage + 1)}
         />
       </QueryState>
 
