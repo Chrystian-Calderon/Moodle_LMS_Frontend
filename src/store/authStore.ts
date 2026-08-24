@@ -16,11 +16,13 @@ interface AuthState {
 
     login: (data: LoginResponseType) => void;
     logout: () => void;
+
+    hasPermission: (permission: string) => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             token: null,
             usuario: null,
             rol: [],
@@ -50,6 +52,10 @@ export const useAuthStore = create<AuthState>()(
                     permisos: [],
                     menu: [],
                 });
+            },
+
+            hasPermission: (permission) => {
+                return get().permisos.includes(permission);
             },
         }),
         {
