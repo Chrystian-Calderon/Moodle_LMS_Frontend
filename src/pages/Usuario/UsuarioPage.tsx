@@ -81,33 +81,11 @@ export default function UsuarioPage() {
                         data={usuarios}
                         filterColumn="username"
                         filterPlaceholder="Buscar usuario..."
+                        pageCount={totalPages}
+                        pageIndex={currentPage - 1}
+                        totalRows={totalUsers}
+                        onPaginationChange={(newPage) => setPage(newPage + 1)}
                     />
-
-                    <div className="mt-4 flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Total: {totalUsers} usuarios</span>
-
-                        <div className="flex items-center gap-2">
-                            <Button
-                                variant="outline"
-                                disabled={currentPage <= 1}
-                                onClick={() => setPage((prev) => prev - 1)}
-                            >
-                                Anterior
-                            </Button>
-
-                            <span className="px-3 text-sm">
-                                Página {currentPage} de {totalPages}
-                            </span>
-
-                            <Button
-                                variant="outline"
-                                disabled={currentPage >= totalPages}
-                                onClick={() => setPage((prev) => prev + 1)}
-                            >
-                                Siguiente
-                            </Button>
-                        </div>
-                    </div>
                 </QueryState>
             )}
 
