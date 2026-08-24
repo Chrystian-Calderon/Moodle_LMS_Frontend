@@ -12,29 +12,34 @@ export const menuItems = [
         icon: faHouse,
         url: "/inicio",
         roles: ["administrador", "estudiante"],
+        permission: "",
     },
     {
         title: "Usuarios",
         icon: faUsersGear,
         url: "/usuario",
         roles: ["administrador"],
+        permission: "usuarios.ver",
     },
     {
         title: "Cursos",
         icon: faBook,
         url: "/cursos",
-        roles: ["administrador"],
+        roles: ["administrador", "estudiante"],
+        permission: "cursos.ver",
     },
     {
         title: "Mis cursos",
         icon: faGraduationCap,
         url: "/mis-cursos",
         roles: ["estudiante"],
+        permission: "cursos.ver",
     },
     {
         title: "Inscripciones",
         icon: faIdBadge,
         url: "/inscripciones",
         roles: ["administrador"],
+        permission: "inscripciones.ver",
     }
 ];
