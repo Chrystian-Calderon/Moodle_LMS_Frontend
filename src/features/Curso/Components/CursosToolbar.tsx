@@ -65,10 +65,10 @@ export function CursosToolbar({
 
                 {categorias.map((item) => (
                     <option
-                        key={item}
-                        value={item}
+                        key={item.slug}
+                        value={item.id}
                     >
-                        {item}
+                        {item.nombre}
                     </option>
                 ))}
             </select>

@@ -54,9 +54,9 @@ export function CursoItem({
             </div>
 
             <div className="min-w-0 flex-1">
-                {curso.categoria && (
+                {curso.categoria?.nombre && (
                     <p className="text-xs font-medium text-primary">
-                        {curso.categoria}
+                        {curso.categoria.nombre}
                     </p>
                 )}
 

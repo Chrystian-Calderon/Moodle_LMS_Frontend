@@ -16,11 +16,11 @@ export function useCursos(
     page: number,
     limit: number,
     search: string = "",
-    categoria: string = "",
+    categoriaId: string
 ) {
     return useQuery({
-        queryKey: ["cursos", page, limit, search, categoria],
-        queryFn: () => GetPaginatedCourses({ page, limit, search, categoria }),
+        queryKey: ["cursos", page, limit, search, categoriaId],
+        queryFn: () => GetPaginatedCourses({ page, limit, search, categoriaId }),
         placeholderData: (previousData) => previousData,
     });
 }

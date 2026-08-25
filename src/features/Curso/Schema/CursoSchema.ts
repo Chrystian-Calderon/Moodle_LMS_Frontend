@@ -4,7 +4,11 @@ import { createPaginatedResponseSchema } from "@/utils/Schema/Response";
 export const CursoSchema = z.object({
     id: z.string(),
     nombre: z.string(),
-    categoria: z.string().nullable(),
+    categoria: z.object({
+        id: z.string(),
+        nombre: z.string(),
+        slug: z.string(),
+    }).nullable(),
     slug: z.string(),
     descripcionCorta: z.string().nullable(),
     descripcionCompleta: z.string().nullable(),
@@ -23,7 +27,13 @@ export const CursosResponseSchema = createPaginatedResponseSchema(CursoSchema);
 
 export type CursosResponseType = z.infer<typeof CursosResponseSchema>;
 
-export const CategoriasResponseSchema = z.array(z.string());
+export const CategoriaSchema = z.object({
+    id: z.string(),
+    nombre: z.string(),
+    slug: z.string(),
+});
+
+export const CategoriasResponseSchema = z.array(CategoriaSchema);
 
 export type CategoriasResponseType = z.infer<typeof CategoriasResponseSchema>;
 

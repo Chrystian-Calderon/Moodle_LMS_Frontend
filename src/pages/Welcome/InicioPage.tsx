@@ -65,15 +65,15 @@ export default function InicioPage() {
 
                         {categorias.map((categoria) => (
                             <button
-                                key={categoria}
+                                key={categoria.id}
                                 type="button"
-                                onClick={() => setCategoriaActiva(categoria)}
-                                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === categoria
+                                onClick={() => setCategoriaActiva(categoria.slug)}
+                                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === categoria.slug
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-muted text-muted-foreground hover:bg-muted/70"
                                     }`}
                             >
-                                {categoria}
+                                {categoria.nombre}
                             </button>
                         ))}
                     </div>
@@ -102,8 +102,8 @@ export default function InicioPage() {
                                         )}
                                     </div>
                                     <div className="p-2.5">
-                                        {curso.categoria && (
-                                            <p className="truncate text-[11px] font-medium text-primary">{curso.categoria}</p>
+                                        {curso.categoria?.nombre && (
+                                            <p className="truncate text-[11px] font-medium text-primary">{curso.categoria.nombre}</p>
                                         )}
                                         <h3 className="mt-0.5 line-clamp-2 text-xs font-semibold leading-snug text-foreground">
                                             {curso.nombre}
