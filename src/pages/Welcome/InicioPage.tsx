@@ -1,25 +1,69 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Plus, GraduationCap } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Plus, GraduationCap, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Banner } from "@/components/common/Banner";
 import { QueryState } from "@/components/common/QueryState";
 
-import { useCursos, useCategoriasCursos } from "@/features/Curso/Hook/CursoHook";
+import { useCursos, useCategoriasCursos, useSubcategoriasCursos } from "@/features/Curso/Hook/CursoHook";
 import { usePermission } from "@/hooks/usePermission";
 import { PERMISSIONS } from "@/utils/constants";
 
 export default function InicioPage() {
     const { can } = usePermission();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const [categoriaActiva, setCategoriaActiva] = useState("");
+    const [categoriaIdSeleccionada, setCategoriaIdSeleccionada] = useState<string | null>(
+        () => searchParams.get("cat") ?? null
+    );
+    const [categoriaActiva, setCategoriaActiva] = useState(
+        () => searchParams.get("sub") ?? searchParams.get("cat") ?? ""
+    );
 
     const { data: categorias = [] } = useCategoriasCursos();
+
+    const categoriaSeleccionada = useMemo(
+        () => (categoriaIdSeleccionada ? categorias.find((c) => c.id === categoriaIdSeleccionada) ?? null : null),
+        [categoriaIdSeleccionada, categorias]
+    );
+
+    const { data: subcategorias = [] } = useSubcategoriasCursos(categoriaIdSeleccionada ?? "");
     const { data, isLoading, isError, error } = useCursos(1, 12, "", categoriaActiva);
 
     const cursos = data?.data ?? [];
     const totalCursos = data?.meta.total;
+
+    const syncURL = (cat: string, sub: string) => {
+        const params = new URLSearchParams();
+        if (cat) params.set("cat", cat);
+        if (sub) params.set("sub", sub);
+        setSearchParams(params, { replace: true });
+    };
+
+    const handleCategoriaClick = (categoria: { id: string; nombre: string }) => {
+        setCategoriaIdSeleccionada(categoria.id);
+        setCategoriaActiva(categoria.id);
+        syncURL(categoria.id, "");
+    };
+
+    const handleSubcategoriaClick = (sub: { id: string }) => {
+        setCategoriaActiva(sub.id);
+        syncURL(categoriaIdSeleccionada ?? "", sub.id);
+    };
+
+    const handleVerTodos = () => {
+        if (categoriaIdSeleccionada) {
+            setCategoriaActiva(categoriaIdSeleccionada);
+            syncURL(categoriaIdSeleccionada, "");
+        }
+    };
+
+    const handleVolver = () => {
+        setCategoriaIdSeleccionada(null);
+        setCategoriaActiva("");
+        setSearchParams({}, { replace: true });
+    };
 
     return (
         <div className="space-y-8 p-6">
@@ -34,7 +78,9 @@ export default function InicioPage() {
             <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h2 className="text-lg font-semibold tracking-tight">Cursos disponibles</h2>
+                        <h2 className="text-lg font-semibold tracking-tight">
+                            {categoriaSeleccionada ? categoriaSeleccionada.nombre : "Cursos disponibles"}
+                        </h2>
                         {totalCursos !== undefined && (
                             <p className="text-xs text-muted-foreground">{totalCursos} cursos publicados</p>
                         )}
@@ -50,30 +96,71 @@ export default function InicioPage() {
                     )}
                 </div>
 
-                {categorias.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setCategoriaActiva("")}
-                            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === ""
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-muted text-muted-foreground hover:bg-muted/70"
-                                }`}
-                        >
-                            Todas
-                        </button>
-
-                        {categorias.map((categoria) => (
+                {!categoriaIdSeleccionada ? (
+                    categorias.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
                             <button
-                                key={categoria.id}
                                 type="button"
-                                onClick={() => setCategoriaActiva(categoria.slug)}
-                                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === categoria.slug
+                                onClick={() => {
+                                    setCategoriaActiva("");
+                                    setSearchParams({}, { replace: true });
+                                }}
+                                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === ""
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-muted text-muted-foreground hover:bg-muted/70"
                                     }`}
                             >
-                                {categoria.nombre}
+                                Todas
+                            </button>
+
+                            {categorias.map((categoria) => (
+                                <button
+                                    key={categoria.slug}
+                                    type="button"
+                                    onClick={() => handleCategoriaClick(categoria)}
+                                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === categoria.id
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground hover:bg-muted/70"
+                                        }`}
+                                >
+                                    {categoria.nombre}
+                                </button>
+                            ))}
+                        </div>
+                    )
+                ) : (
+                    <div className="flex flex-wrap gap-2">
+                        <button
+                            type="button"
+                            onClick={handleVolver}
+                            className="flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/70"
+                        >
+                            <ArrowLeft className="h-3 w-3" />
+                            Volver
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={handleVerTodos}
+                            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === categoriaIdSeleccionada
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted text-muted-foreground hover:bg-muted/70"
+                                }`}
+                        >
+                            Todos
+                        </button>
+
+                        {subcategorias.map((sub) => (
+                            <button
+                                key={sub.slug}
+                                type="button"
+                                onClick={() => handleSubcategoriaClick(sub)}
+                                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${categoriaActiva === sub.id
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-muted text-muted-foreground hover:bg-muted/70"
+                                    }`}
+                            >
+                                {sub.nombre}
                             </button>
                         ))}
                     </div>

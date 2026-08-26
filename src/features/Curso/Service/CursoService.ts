@@ -51,6 +51,12 @@ export async function GetCourseCategories(): Promise<CategoriasResponseType> {
     return response.data;
 }
 
+export async function GetCourseSubCategories(categoriaId: string): Promise<CategoriasResponseType> {
+    const response = await apiService.get(`/curso/cat/subcategorias/${categoriaId}`);
+
+    return response.data;
+}
+
 export async function CreateCurso(data: CursoCreateType): Promise<CursoDetailType> {
     const formData = buildFormData({
         nombre: data.nombre,
