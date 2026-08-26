@@ -5,6 +5,7 @@ import {
     DeleteCurso,
     GetCourseById,
     GetCourseCategories,
+    GetCourseSubCategories,
     GetMisCursosInscritos,
     GetPaginatedCourses,
     UpdateCurso,
@@ -12,15 +13,18 @@ import {
 
 import { CursoCreateType, CursoUpdateType } from "../Schema/CursoSchema";
 
+export type TipoFiltro = "categoria" | "subcategoria";
+
 export function useCursos(
     page: number,
     limit: number,
     search: string = "",
-    categoria: string = "",
+    categoriaId: string,
+    tipoFiltro?: TipoFiltro
 ) {
     return useQuery({
-        queryKey: ["cursos", page, limit, search, categoria],
-        queryFn: () => GetPaginatedCourses({ page, limit, search, categoria }),
+        queryKey: ["cursos", page, limit, search, categoriaId, tipoFiltro],
+        queryFn: () => GetPaginatedCourses({ page, limit, search, categoriaId }),
         placeholderData: (previousData) => previousData,
     });
 }
@@ -37,6 +41,15 @@ export function useCategoriasCursos() {
     return useQuery({
         queryKey: ["cursos", "categorias"],
         queryFn: GetCourseCategories,
+        staleTime: 1000 * 60 * 10,
+    });
+}
+
+export function useSubcategoriasCursos(categoriaId: string) {
+    return useQuery({
+        queryKey: ["cursos", "subcategorias", categoriaId],
+        queryFn: () => GetCourseSubCategories(categoriaId),
+        enabled: !!categoriaId,
         staleTime: 1000 * 60 * 10,
     });
 }

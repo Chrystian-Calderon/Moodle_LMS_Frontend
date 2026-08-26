@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/components/ModeToggle";
-import { Reset_password_form } from "@/features/Auth/Components/reset_password_form";
+import { Reset_password_form } from "@/features/Auth/components/reset_password_form";
 
 
 export function ChangePassword() {

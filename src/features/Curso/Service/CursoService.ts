@@ -14,11 +14,11 @@ interface GetCursosParams {
     page?: number;
     limit?: number;
     search?: string;
-    categoria?: string;
+    categoriaId?: string;
 }
 
 export async function GetPaginatedCourses({
-    page = 1, limit = 10, search, categoria,
+    page = 1, limit = 10, search, categoriaId,
 }: GetCursosParams): Promise<CursosResponseType> {
 
     const params = new URLSearchParams();
@@ -30,8 +30,8 @@ export async function GetPaginatedCourses({
         params.set("search", search.trim());
     }
 
-    if (categoria) {
-        params.set("categoria", categoria);
+    if (categoriaId) {
+        params.set("categoriaId", categoriaId);
     }
 
     const response = await apiService.get(`/curso?${params.toString()}`);
@@ -47,6 +47,12 @@ export async function GetCourseById(id: string): Promise<CursoType> {
 
 export async function GetCourseCategories(): Promise<CategoriasResponseType> {
     const response = await apiService.get("/curso/cat/categorias");
+
+    return response.data;
+}
+
+export async function GetCourseSubCategories(categoriaId: string): Promise<CategoriasResponseType> {
+    const response = await apiService.get(`/curso/cat/subcategorias/${categoriaId}`);
 
     return response.data;
 }
