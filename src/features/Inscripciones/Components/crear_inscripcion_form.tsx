@@ -4,13 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Select from "react-select";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
     Field,
     FieldGroup,
     FieldLabel,
@@ -29,11 +22,15 @@ import {
 import { DialogEstudiante } from "./DialogEstudiante";
 import { EstudianteType } from "../Schema/EstudianteSchema";
 
-export function CrearInscripcionForm() {
-    const crearInscripcionMutation = useCrearInscripcion();
+interface CrearInscripcionFormProps {
+    onSuccess?: () => void;
+    showHeader?: boolean;
+}
+
+export function CrearInscripcionForm({ onSuccess, showHeader = true }: CrearInscripcionFormProps) {
+    const crearInscripcionMutation = useCrearInscripcion(onSuccess);
     const { data: cursos = [], isLoading: loadingCursos } = useCursos();
     const { data: estudiantes = [], isLoading: loadingEstudiantes } = useEstudiantes();
-    console.log("estudiantes", estudiantes);
     const [cursoId, setCursoId] = useState<string | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -76,18 +73,10 @@ export function CrearInscripcionForm() {
 
     return (
         <div className="flex flex-col gap-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Crear Inscripción</CardTitle>
-                    <CardDescription>
-                        Ingresa los datos para crear una inscripción
-                    </CardDescription>
-                </CardHeader>
-
-                <CardContent>
+            <div className="">
+                <div>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FieldGroup className="gap-3">
-
                             <Field>
                                 <FieldLabel htmlFor="cursoId">Curso</FieldLabel>
                                 <Controller
@@ -192,8 +181,8 @@ export function CrearInscripcionForm() {
                             </Field>
                         </FieldGroup>
                     </form>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
             <DialogEstudiante open={openDialog} onOpenChange={setOpenDialog} />
         </div>
     );
