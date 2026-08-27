@@ -7,8 +7,8 @@ export async function CrearInscripcion(data: CrearInscripcionSchemaType) {
     return response.data;
 }
 
-export async function ObtenerInscripciones(page: number, limit: number = 10) {
-    const response = await apiService.get(`/inscripciones/paginated?page=${page}&limit=${limit}`);
+export async function ObtenerInscripciones(page: number, limit: number = 10, search?: string) {
+    const response = await apiService.get(`/inscripciones/paginated?page=${page}&limit=${limit}&search=${search}`);
     return response.data;
 }
 
@@ -27,12 +27,27 @@ export async function CrearEstudiante(data: CrearEstudianteSchemaType) {
     return response.data;
 }
 
-export async function EliminarCursoInscripcion(inscripcionId: string, cursoId: string) {
-    const response = await apiService.delete(`/inscripciones/${inscripcionId}/cursos/${cursoId}`);
+export async function ObtenerInscripcionPorEstudiante(estudianteId: string) {
+    const response = await apiService.get(`/inscripciones/estudiante/${estudianteId}`);
+    return response.data;
+}
+
+export async function AgregarCursoInscripcion(data: CrearInscripcionSchemaType) {
+    const response = await apiService.post("/inscripciones/multiple", data);
+    return response.data;
+}
+
+export async function EliminarCursoInscripcion(estudianteId: string, cursoId: string) {
+    const response = await apiService.delete(`/inscripciones/${estudianteId}/cursos/${cursoId}`);
     return response.data;
 }
 
 export async function EliminarModuloInscripcion(inscripcionId: string, cursoId: string, moduloId: string) {
     const response = await apiService.delete(`/inscripciones/${inscripcionId}/cursos/${cursoId}/modulos/${moduloId}`);
+    return response.data;
+}
+
+export async function EliminarInscripcionesPorEstudiante(estudianteId: string) {
+    const response = await apiService.delete(`/inscripciones/all/${estudianteId}`);
     return response.data;
 }

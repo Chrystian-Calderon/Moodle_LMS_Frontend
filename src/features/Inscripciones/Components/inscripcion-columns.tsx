@@ -8,19 +8,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Eye } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface InscripcionColumnsProps {
   onDelete: (inscripcion: InscripcionIndexType) => void;
-  onView: (id: string) => void;
+  onView: (inscripcion: InscripcionIndexType) => void;
+  onEdit: (inscripcion: InscripcionIndexType) => void;
   onViewCursos: (inscripcion: InscripcionIndexType) => void;
+  canEdit: boolean;
   canDelete: boolean;
 }
 
 export function InscripcionColumns({
   onDelete,
   onView,
+  onEdit,
   onViewCursos,
   canDelete,
+  canEdit,
 }: InscripcionColumnsProps): ColumnDef<InscripcionIndexType>[] {
   return [
     {
@@ -28,7 +33,6 @@ export function InscripcionColumns({
       header: "Estudiante",
       cell: ({ row }) => {
         const inscripcion = row.original;
-        console.log("inscripcion", inscripcion);
         const nombreCompleto = `${inscripcion.nombre} ${inscripcion.apellidoPaterno} ${inscripcion.apellidoMaterno}`;
         return (
           <div>
@@ -65,27 +69,27 @@ export function InscripcionColumns({
       },
     },
 
-    // {
-    //   accessorKey: "estadoAcceso",
-    //   header: "Estado de acceso",
-    //   cell: ({ row }) => {
-    //     const estado = row.original.estadoAcceso.toLowerCase();
+    {
+      accessorKey: "estado",
+      header: "Estado",
+      cell: ({ row }) => {
+        const estado = row.original.estado.toLowerCase();
 
-    //     return (
-    //       <Badge
-    //         variant={
-    //           estado === "habilitado"
-    //             ? "default"
-    //             : estado === "pendiente"
-    //               ? "secondary"
-    //               : "destructive"
-    //         }
-    //       >
-    //         {row.original.estadoAcceso}
-    //       </Badge>
-    //     );
-    //   },
-    // },
+        return (
+          <Badge
+            variant={
+              estado === "activo"
+                ? "default"
+                : estado === "pendiente"
+                  ? "secondary"
+                  : "destructive"
+            }
+          >
+            {row.original.estado}
+          </Badge>
+        );
+      },
+    },
 
     {
       id: "actions",
@@ -99,8 +103,16 @@ export function InscripcionColumns({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onView(row.original.id)}>
+            <DropdownMenuItem onClick={() => onView(row.original)}>
               Ver
+            </DropdownMenuItem>
+            {canEdit && (
+              <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                Editar
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={() => onViewCursos(row.original)}>
+              Ver cursos
             </DropdownMenuItem>
             {canDelete && (
               <DropdownMenuItem onClick={() => onDelete(row.original)}>

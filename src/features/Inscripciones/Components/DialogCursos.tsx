@@ -44,7 +44,7 @@ export function DialogCursos({
                       {curso.nombre}
                     </div>
                     <span className="text-xs text-muted-foreground">
-                      {curso.categoria ?? ""}
+                      {curso.categoria.nombre ?? ""}
                     </span>
                   </CardTitle>
                 </CardHeader>
