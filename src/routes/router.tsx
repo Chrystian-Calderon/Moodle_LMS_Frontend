@@ -15,11 +15,12 @@ import ModulosPage from "@/pages/Modulo/ModuloPage";
 import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
 import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage";
 import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
+import EditarInscripcionPage from "@/pages/Inscripciones/EditarInscripcionPage";
 import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
 import InicioPage from "@/pages/Welcome/InicioPage";
 import { RouteErrorBoundary } from "@/components/common/app/Routeerrorboundary";
 import ProfilePage from "@/pages/Profile/ProfilePage";
-import PdfPage from "@/pages/pdf/pdfPage";
+import Prueba from "@/pages/pdf/Prueba";
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -32,7 +33,6 @@ export const router = createBrowserRouter([
             </Suspense>
         ),
         children: [
-            // / -> /login
             {
                 index: true,
                 element: <Navigate to="/login" replace />,
@@ -42,7 +42,6 @@ export const router = createBrowserRouter([
                 path: "login",
                 element: <AuthPage />,
             },
-
             {
                 element: <ProtectedRoute />,
                 children: [
@@ -73,7 +72,8 @@ export const router = createBrowserRouter([
                             },
                             { path: "inscripciones", element: <InscripcionesPage /> },
                             { path: "inscripciones/crear", element: <CrearInscripcionPage /> },
-                            { path: "pdf", element: <PdfPage /> }
+                            { path: "inscripciones/estudiante/:estudianteId", element: <EditarInscripcionPage /> },
+                            { path: "prueba", element: <Prueba /> }
                         ],
                     },
                 ],
