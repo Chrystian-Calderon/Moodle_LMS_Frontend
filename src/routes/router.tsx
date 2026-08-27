@@ -19,7 +19,7 @@ import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
 import InicioPage from "@/pages/Welcome/InicioPage";
 import { RouteErrorBoundary } from "@/components/common/app/Routeerrorboundary";
 import ProfilePage from "@/pages/Profile/ProfilePage";
-import Prueba from "@/pages/pdf/Prueba";
+import MisCertificados from "@/pages/Certificados/MisCertificados";
 
 const Loading = () => <div>Cargando...</div>;
 
@@ -71,7 +71,7 @@ export const router = createBrowserRouter([
                             },
                             { path: "inscripciones", element: <InscripcionesPage /> },
                             { path: "inscripciones/crear", element: <CrearInscripcionPage /> },
-                            { path: "prueba", element: <Prueba /> }
+                            { path: "mis-certificados", element: <MisCertificados /> }
                         ],
                     },
                 ],

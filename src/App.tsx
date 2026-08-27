@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom"
 import { router } from "./routes/router";
+import "react-toastify/dist/ReactToastify.css";
 import { ErrorBoundary } from "@/components/common/app/ErrorBoundary";
-
 import { ToastContainer } from "react-toastify"
 
 function App() {
