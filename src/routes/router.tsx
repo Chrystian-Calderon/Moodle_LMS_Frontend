@@ -15,6 +15,7 @@ import ModulosPage from "@/pages/Modulo/ModuloPage";
 import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
 import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage";
 import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
+import EditarInscripcionPage from "@/pages/Inscripciones/EditarInscripcionPage";
 import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
 import InicioPage from "@/pages/Welcome/InicioPage";
 import { RouteErrorBoundary } from "@/components/common/app/Routeerrorboundary";
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
                             },
                             { path: "inscripciones", element: <InscripcionesPage /> },
                             { path: "inscripciones/crear", element: <CrearInscripcionPage /> },
+                            { path: "inscripciones/estudiante/:estudianteId", element: <EditarInscripcionPage /> },
                             { path: "pdf", element: <PdfPage /> }
                         ],
                     },
