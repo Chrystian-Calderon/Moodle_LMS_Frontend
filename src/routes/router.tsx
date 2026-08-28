@@ -1,28 +1,71 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import RootLayout from "@/layouts/RootLayout";
-import DashboardLayout from "@/layouts/DashboardLayout";
-import { ProtectedRoute } from "@/components/Login/ProtectedRoute";
-import { AuthPage } from "@/pages/Auth/AuthPage";
-import { ChangePassword } from "@/pages/Auth/ChangePassword";
-import UsuarioPage from "@/pages/Usuario/UsuarioPage";
-import UsuarioDetallePage from "@/pages/Usuario/UsuarioDetallePage";
-import CursosPage from "@/pages/Curso/CursoPage";
-import CursoDetallePage from "@/pages/Curso/CursoDetallePage";
-import MisCursosPage from "@/pages/Curso/MisCursosPage";
-import ModulosPage from "@/pages/Modulo/ModuloPage";
-import ModuloDetallePage from "@/pages/Modulo/ModuloDetallePage";
-import LeccionDetallePage from "@/pages/Leccion/LeccionDetallePage";
-import { CrearInscripcionPage } from "@/pages/Inscripciones/CrearInscripcionPage";
-import EditarInscripcionPage from "@/pages/Inscripciones/EditarInscripcionPage";
-import { InscripcionesPage } from "@/pages/Inscripciones/InscripcionesPage";
-import InicioPage from "@/pages/Welcome/InicioPage";
 import { RouteErrorBoundary } from "@/components/common/app/Routeerrorboundary";
-import ProfilePage from "@/pages/Profile/ProfilePage";
-import MisCertificados from "@/pages/Certificados/MisCertificados";
+
+const RootLayout = lazy(() => import("@/layouts/RootLayout"));
+const DashboardLayout = lazy(() => import("@/layouts/DashboardLayout"));
+
+const ProtectedRoute = lazy(() =>
+    import("@/components/Login/ProtectedRoute").then((module) => ({
+        default: module.ProtectedRoute,
+    }))
+);
+
+const AuthPage = lazy(() =>
+    import("@/pages/Auth/AuthPage").then((module) => ({
+        default: module.AuthPage,
+    }))
+);
+
+const ChangePassword = lazy(() =>
+    import("@/pages/Auth/ChangePassword").then((module) => ({
+        default: module.ChangePassword,
+    }))
+);
+
+const InicioPage = lazy(() => import("@/pages/Welcome/InicioPage"));
+const ProfilePage = lazy(() => import("@/pages/Profile/ProfilePage"));
+
+const UsuarioPage = lazy(() => import("@/pages/Usuario/UsuarioPage"));
+const UsuarioDetallePage = lazy(() => import("@/pages/Usuario/UsuarioDetallePage"));
+
+const CursosPage = lazy(() => import("@/pages/Curso/CursoPage"));
+const CursoDetallePage = lazy(() => import("@/pages/Curso/CursoDetallePage"));
+const MisCursosPage = lazy(() => import("@/pages/Curso/MisCursosPage"));
+
+const ModulosPage = lazy(() => import("@/pages/Modulo/ModuloPage"));
+const ModuloDetallePage = lazy(() => import("@/pages/Modulo/ModuloDetallePage"));
+
+const LeccionDetallePage = lazy(() => import("@/pages/Leccion/LeccionDetallePage"));
+
+const CrearInscripcionPage = lazy(() =>
+    import("@/pages/Inscripciones/CrearInscripcionPage").then((module) => ({
+        default: module.CrearInscripcionPage,
+    }))
+);
+
+const EditarInscripcionPage = lazy(
+    () => import("@/pages/Inscripciones/EditarInscripcionPage")
+);
+
+const InscripcionesPage = lazy(() =>
+    import("@/pages/Inscripciones/InscripcionesPage").then((module) => ({
+        default: module.InscripcionesPage,
+    }))
+);
+
+const MisCertificados = lazy(
+    () => import("@/pages/Certificados/MisCertificados")
+);
 
 const Loading = () => <div>Cargando...</div>;
+
+const lazyElement = (Component: React.LazyExoticComponent<React.ComponentType>) => (
+    <Suspense fallback={<Loading />}>
+        <Component />
+    </Suspense>
+);
 
 export const router = createBrowserRouter([
     {
@@ -37,44 +80,111 @@ export const router = createBrowserRouter([
                 index: true,
                 element: <Navigate to="/login" replace />,
             },
-
             {
                 path: "login",
-                element: <AuthPage />,
+                element: lazyElement(AuthPage),
             },
             {
-                element: <ProtectedRoute />,
+                element: lazyElement(ProtectedRoute),
                 children: [
                     {
                         path: "cambiar-password",
-                        element: <ChangePassword />,
+                        element: lazyElement(ChangePassword),
                     },
                     {
-                        element: (
-                            <Suspense fallback={<Loading />}>
-                                <DashboardLayout />
-                            </Suspense>
-                        ),
+                        element: lazyElement(DashboardLayout),
                         errorElement: <RouteErrorBoundary />,
                         children: [
-                            { path: "inicio", element: <InicioPage /> },
-                            { path: "perfil", element: <ProfilePage /> },
-                            { path: "usuario", element: <UsuarioPage /> },
-                            { path: "usuario/:id", element: <UsuarioDetallePage /> },
-                            { path: "cursos", element: <CursosPage /> },
-                            { path: "mis-cursos", element: <MisCursosPage /> },
-                            { path: "cursos/:id", element: <CursoDetallePage /> },
-                            { path: "cursos/:id/modulos", element: <ModulosPage /> },
-                            { path: "cursos/:id/modulos/:moduloId", element: <ModuloDetallePage /> },
                             {
-                                path: "cursos/:id/modulos/:moduloId/lecciones/:leccionId",
-                                element: <LeccionDetallePage />,
+                                path: "inicio",
+                                element: lazyElement(InicioPage),
                             },
-                            { path: "inscripciones", element: <InscripcionesPage /> },
-                            { path: "inscripciones/crear", element: <CrearInscripcionPage /> },
-                            { path: "mis-certificados", element: <MisCertificados /> },
-                            { path: "inscripciones/estudiante/:estudianteId", element: <EditarInscripcionPage /> },
-
+                            {
+                                path: "perfil",
+                                element: lazyElement(ProfilePage),
+                            },
+                            {
+                                path: "usuario",
+                                children: [
+                                    {
+                                        index: true,
+                                        element: lazyElement(UsuarioPage),
+                                    },
+                                    {
+                                        path: ":id",
+                                        element: lazyElement(UsuarioDetallePage),
+                                    },
+                                ],
+                            },
+                            {
+                                path: "cursos",
+                                children: [
+                                    {
+                                        index: true,
+                                        element: lazyElement(CursosPage),
+                                    },
+                                    {
+                                        path: "mis-cursos",
+                                        element: lazyElement(MisCursosPage),
+                                    },
+                                    {
+                                        path: ":id",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: lazyElement(CursoDetallePage),
+                                            },
+                                            {
+                                                path: "modulos",
+                                                children: [
+                                                    {
+                                                        index: true,
+                                                        element: lazyElement(ModulosPage),
+                                                    },
+                                                    {
+                                                        path: ":moduloId",
+                                                        children: [
+                                                            {
+                                                                index: true,
+                                                                element: lazyElement(ModuloDetallePage),
+                                                            },
+                                                            {
+                                                                path: "lecciones/:leccionId",
+                                                                element: lazyElement(
+                                                                    LeccionDetallePage
+                                                                ),
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                            {
+                                path: "inscripciones",
+                                children: [
+                                    {
+                                        index: true,
+                                        element: lazyElement(InscripcionesPage),
+                                    },
+                                    {
+                                        path: "crear",
+                                        element: lazyElement(CrearInscripcionPage),
+                                    },
+                                    {
+                                        path: "estudiante/:estudianteId",
+                                        element: lazyElement(
+                                            EditarInscripcionPage
+                                        ),
+                                    },
+                                ],
+                            },
+                            {
+                                path: "mis-certificados",
+                                element: lazyElement(MisCertificados),
+                            },
                         ],
                     },
                 ],
