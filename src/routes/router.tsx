@@ -225,7 +225,7 @@ export const router = createBrowserRouter([
                                 ],
                             },
                             {
-                                path: "mis-certificados",
+                                path: "certificados",
                                 element: lazyElement(MisCertificados),
                             },
                         ],
