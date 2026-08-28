@@ -1,9 +1,11 @@
+import { PERMISSIONS } from "@/utils/constants";
 import {
     faHouse,
     faUsersGear,
     faBook,
     faGraduationCap,
     faIdBadge,
+    faCertificate,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const menuItems = [
@@ -11,30 +13,34 @@ export const menuItems = [
         title: "Inicio",
         icon: faHouse,
         url: "/inicio",
-        roles: ["administrador", "estudiante"],
     },
     {
         title: "Usuarios",
         icon: faUsersGear,
         url: "/usuario",
-        roles: ["administrador"],
+        permission: PERMISSIONS.USUARIOS.VER,
     },
     {
         title: "Cursos",
         icon: faBook,
         url: "/cursos",
-        roles: ["administrador"],
+        permission: PERMISSIONS.CURSOS.VER,
     },
     {
         title: "Mis cursos",
         icon: faGraduationCap,
-        url: "/mis-cursos",
-        roles: ["estudiante"],
+        url: "/cursos/mis-cursos",
+        permission: PERMISSIONS.CURSOS.VER,
     },
     {
         title: "Inscripciones",
         icon: faIdBadge,
         url: "/inscripciones",
-        roles: ["administrador"],
-    }
+        permission: PERMISSIONS.INSCRIPCIONES.VER,
+    },
+    {
+        title: "Mis certificados",
+        icon: faCertificate,
+        url: "/mis-certificados",
+    },
 ];

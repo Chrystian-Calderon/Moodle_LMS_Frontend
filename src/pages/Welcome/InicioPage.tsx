@@ -9,6 +9,7 @@ import { QueryState } from "@/components/common/QueryState";
 import { useCursos, useCategoriasCursos, useSubcategoriasCursos } from "@/features/Curso/Hook/CursoHook";
 import { usePermission } from "@/hooks/usePermission";
 import { PERMISSIONS } from "@/utils/constants";
+import { AppTitle } from "@/components/common/Apptittle";
 
 export default function InicioPage() {
     const { can } = usePermission();
@@ -78,12 +79,18 @@ export default function InicioPage() {
             <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h2 className="text-lg font-semibold tracking-tight">
-                            {categoriaSeleccionada ? categoriaSeleccionada.nombre : "Cursos disponibles"}
-                        </h2>
-                        {totalCursos !== undefined && (
-                            <p className="text-xs text-muted-foreground">{totalCursos} cursos publicados</p>
-                        )}
+                        <AppTitle
+                            title={
+                                categoriaSeleccionada
+                                    ? categoriaSeleccionada.nombre
+                                    : "Cursos disponibles"
+                            }
+                            subtitle={
+                                totalCursos !== undefined
+                                    ? `${totalCursos} cursos publicados`
+                                    : undefined
+                            }
+                        />
                     </div>
 
                     {can(PERMISSIONS.CURSOS.CREAR) && (

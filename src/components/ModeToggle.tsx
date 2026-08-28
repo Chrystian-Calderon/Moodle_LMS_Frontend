@@ -1,52 +1,48 @@
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
+import * as React from "react";
+import { Moon, Sun } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button";
 
 export function ModeToggle() {
-    const [theme, setThemeState] = React.useState<
-        "theme-light" | "dark" | "system"
-    >("theme-light")
+    const [isDark, setIsDark] = React.useState(false);
 
     React.useEffect(() => {
-        const isDarkMode = document.documentElement.classList.contains("dark")
-        setThemeState(isDarkMode ? "dark" : "theme-light")
-    }, [])
+        setIsDark(
+            document.documentElement.classList.contains("dark")
+        );
+    }, []);
 
-    React.useEffect(() => {
-        const isDark =
-            theme === "dark" ||
-            (theme === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        document.documentElement.classList[isDark ? "add" : "remove"]("dark")
-    }, [theme])
+    const toggleTheme = () => {
+        const nextIsDark = !isDark;
+
+        document.documentElement.classList.toggle(
+            "dark",
+            nextIsDark
+        );
+
+        setIsDark(nextIsDark);
+    };
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                    <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                    <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-                    <span className="sr-only">Toggle theme</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setThemeState("theme-light")}>
-                    Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setThemeState("dark")}>
-                    Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setThemeState("system")}>
-                    System
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
+        <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            aria-label={
+                isDark
+                    ? "Cambiar a modo claro"
+                    : "Cambiar a modo oscuro"
+            }
+        >
+            {isDark ? (
+                <Sun className="h-[1.2rem] w-[1.2rem]" />
+            ) : (
+                <Moon className="h-[1.2rem] w-[1.2rem]" />
+            )}
+
+            <span className="sr-only">
+                Cambiar tema
+            </span>
+        </Button>
+    );
 }

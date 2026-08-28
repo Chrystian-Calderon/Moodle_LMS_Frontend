@@ -11,23 +11,16 @@ import {
 import { useLocation } from "react-router-dom";
 import { LinkSidebar } from "../nav/Link";
 import { menuItems } from "@/lib/menus";
-import { useAuthStore } from "@/store/authStore";
+import { usePermission } from "@/hooks/usePermission";
 
 export default function AppSidebar() {
-    const pathname = useLocation().pathname;
-
-    const backendMenu = useAuthStore(
-        (state) => state.menu
-    );
+    const { pathname } = useLocation();
+    const { can } = usePermission();
 
     const visibleMenuItems = menuItems.filter(
-        (localItem) => {
-            if (localItem.url === "/inicio") {
-                return true;
-            }
-
-            return backendMenu;
-        }
+        (item) =>
+            !item.permission ||
+            can(item.permission)
     );
 
     return (
@@ -40,24 +33,23 @@ export default function AppSidebar() {
 
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {visibleMenuItems.map(
-                                (item) => (
-                                    <LinkSidebar
-                                        key={item.url}
-                                        to={item.url}
-                                        icon={item.icon}
-                                        title={item.title}
-                                        isActive={
-                                            pathname ===
-                                            item.url
-                                        }
-                                    />
-                                )
-                            )}
+                            {visibleMenuItems.map((item) => (
+                                <LinkSidebar
+                                    key={item.url}
+                                    to={item.url}
+                                    icon={item.icon}
+                                    title={item.title}
+                                    isActive={
+                                        pathname === item.url ||
+                                        pathname.startsWith(`${item.url}/`)
+                                    }
+                                />
+                            ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+
             <SidebarRail />
         </Sidebar>
     );

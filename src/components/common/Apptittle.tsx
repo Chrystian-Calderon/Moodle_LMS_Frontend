@@ -10,11 +10,18 @@ export function AppTitle({ title, subtitle, badge }: AppTitleProps) {
     return (
         <div>
             <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold tracking-wide text-primary">{title}</h1>
+                <h1 className="text-2xl font-bold tracking-wide text-primary">
+                    {title}
+                </h1>
+
                 {badge}
             </div>
 
-            {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+            {subtitle && (
+                <p className="text-sm text-muted-foreground">
+                    {subtitle}
+                </p>
+            )}
         </div>
     );
 }

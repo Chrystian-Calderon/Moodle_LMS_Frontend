@@ -61,12 +61,8 @@ export const Headerbar = () => {
     };
 
     return (
-        // sticky (no fixed): al ser hijo directo de SidebarInset, el propio
-        // layout flex del sidebar ya se encarga de correr/achicar este header
-        // cuando el sidebar pasa de expandido a modo icono. No hace falta
-        // calcular left/width a mano.
         <header
-            className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6"
+            className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-header px-4 sm:px-6"
         >
             <div className="flex items-center gap-3">
                 <SidebarTrigger
@@ -84,7 +80,9 @@ export const Headerbar = () => {
 
             <div className="flex items-center gap-2">
                 <ModeToggle />
+
                 <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button
@@ -100,22 +98,16 @@ export const Headerbar = () => {
                             </Avatar>
 
                             <div className="hidden flex-col items-start md:flex">
-                                <span
-                                    className="max-w-[180px] truncate text-xs font-semibold leading-tight text-foreground"
-                                >
+                                <span className="max-w-[180px] truncate text-xs font-semibold leading-tight text-foreground">
                                     {fullName}
                                 </span>
 
-                                <span
-                                    className="max-w-[180px] truncate text-[10px] leading-tight text-muted-foreground"
-                                >
+                                <span className="max-w-[180px] truncate text-[10px] leading-tight text-muted-foreground">
                                     {email}
                                 </span>
                             </div>
 
-                            <ChevronDown
-                                className="hidden h-4 w-4 text-muted-foreground transition-transform sm:block"
-                            />
+                            <ChevronDown className="hidden h-4 w-4 text-muted-foreground transition-transform sm:block" />
                         </Button>
                     </DropdownMenuTrigger>
 
@@ -124,13 +116,10 @@ export const Headerbar = () => {
                         sideOffset={8}
                         className="w-64 rounded-xl p-2"
                     >
-
                         <DropdownMenuLabel className="px-3 py-3">
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-10 w-10 border border-primary/20">
-                                    <AvatarFallback
-                                        className="bg-primary/10 font-bold text-primary"
-                                    >
+                                    <AvatarFallback className="bg-primary/10 font-bold text-primary">
                                         {initials}
                                     </AvatarFallback>
                                 </Avatar>

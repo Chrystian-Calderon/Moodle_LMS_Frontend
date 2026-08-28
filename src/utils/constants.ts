@@ -5,36 +5,42 @@ export const PERMISSIONS = {
         EDITAR: "usuarios.editar",
         ELIMINAR: "usuarios.eliminar",
     },
+
     CURSOS: {
         VER: "cursos.ver",
         CREAR: "cursos.crear",
         EDITAR: "cursos.editar",
         ELIMINAR: "cursos.eliminar",
     },
+
     MODULOS: {
-        VER: "cursos.ver",
-        CREAR: "cursos.crear",
-        EDITAR: "cursos.editar",
-        ELIMINAR: "cursos.eliminar",
+        VER: "modulos.ver",
+        CREAR: "modulos.crear",
+        EDITAR: "modulos.editar",
+        ELIMINAR: "modulos.eliminar",
     },
+
     LECCIONES: {
-        VER: "cursos.ver",
-        CREAR: "cursos.crear",
-        EDITAR: "cursos.editar",
-        ELIMINAR: "cursos.eliminar",
+        VER: "lecciones.ver",
+        CREAR: "lecciones.crear",
+        EDITAR: "lecciones.editar",
+        ELIMINAR: "lecciones.eliminar",
     },
+
     FORMULARIOS: {
         VER: "formularios.ver",
         CREAR: "formularios.crear",
         EDITAR: "formularios.editar",
         ELIMINAR: "formularios.eliminar",
     },
+
     INSCRIPCIONES: {
         VER: "inscripciones.ver",
         CREAR: "inscripciones.crear",
         EDITAR: "inscripciones.editar",
         ELIMINAR: "inscripciones.eliminar",
     },
+
     ROLES: {
         VER: "roles.ver",
         CREAR: "roles.crear",

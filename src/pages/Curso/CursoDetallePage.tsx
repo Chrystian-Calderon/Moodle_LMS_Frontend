@@ -73,7 +73,7 @@ export default function CursoDetallePage() {
                             </div>
 
                             <div className="min-w-0 flex-1">
-                                <AppTitle title={curso.nombre} subtitle={curso.categoria ?? undefined} />
+                                <AppTitle title={curso.nombre} subtitle={curso.categoria?.slug ?? undefined} />
 
                                 {curso.descripcionCompleta && (
                                     <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
