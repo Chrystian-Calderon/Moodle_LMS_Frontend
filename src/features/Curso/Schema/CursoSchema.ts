@@ -20,22 +20,29 @@ export const CursoSchema = z.object({
     creadoEn: z.string(),
     actualizadoEn: z.string(),
 });
-
 export type CursoType = z.infer<typeof CursoSchema>;
-
 export const CursosResponseSchema = createPaginatedResponseSchema(CursoSchema);
-
 export type CursosResponseType = z.infer<typeof CursosResponseSchema>;
 
 export const CategoriaSchema = z.object({
     id: z.string(),
     nombre: z.string(),
     slug: z.string(),
+    categoriaPadreId: z.string().nullable().optional(),
 });
 
-export const CategoriasResponseSchema = z.array(CategoriaSchema);
+export type CategoriaType = z.infer<typeof CategoriaSchema>;
 
+export const CategoriasResponseSchema = z.array(CategoriaSchema);
 export type CategoriasResponseType = z.infer<typeof CategoriasResponseSchema>;
+
+export const CategoriaCreateSchema = z.object({
+    nombre: z.string().min(1, "El nombre es obligatorio"),
+    slug: z.string().min(1, "El slug es obligatorio"),
+    categoriaPadreId: z.string().optional(),
+});
+
+export type CategoriaCreateType = z.infer<typeof CategoriaCreateSchema>;
 
 export const CursoDetailResponseSchema = CursoSchema;
 
@@ -44,7 +51,7 @@ export type CursoDetailType = z.infer<typeof CursoDetailResponseSchema>;
 
 export const CursoCreateSchema = z.object({
     nombre: z.string().min(1, "El nombre es obligatorio"),
-    categoria: z.string().optional(),
+    categoriaId: z.string().min(1, "La categoría es obligatoria"),
     slug: z.string().min(1, "El slug es obligatorio"),
     descripcionCorta: z.string().optional(),
     descripcionCompleta: z.string().optional(),
@@ -82,3 +89,4 @@ export const MisCursoInscritoSchema = z.object({
 });
 
 export type MisCursoInscritoType = z.infer<typeof MisCursoInscritoSchema>;
+

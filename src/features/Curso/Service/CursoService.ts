@@ -1,5 +1,7 @@
 import { apiService } from "@/api/api";
 import {
+    CategoriaCreateType,
+    CategoriaType,
     CategoriasResponseType,
     CursoCreateType,
     CursoDetailType,
@@ -46,21 +48,19 @@ export async function GetCourseById(id: string): Promise<CursoType> {
 }
 
 export async function GetCourseCategories(): Promise<CategoriasResponseType> {
-    const response = await apiService.get("/curso/cat/categorias");
-
+    const response = await apiService.get("/categoria");
     return response.data;
 }
 
 export async function GetCourseSubCategories(categoriaId: string): Promise<CategoriasResponseType> {
-    const response = await apiService.get(`/curso/cat/subcategorias/${categoriaId}`);
-
+    const response = await apiService.get(`/categoria/${categoriaId}/subcategorias`);
     return response.data;
 }
 
 export async function CreateCurso(data: CursoCreateType): Promise<CursoDetailType> {
     const formData = buildFormData({
         nombre: data.nombre,
-        categoria: data.categoria,
+        categoriaId: data.categoriaId,
         slug: data.slug,
         descripcionCorta: data.descripcionCorta,
         descripcionCompleta: data.descripcionCompleta,
@@ -77,7 +77,7 @@ export async function CreateCurso(data: CursoCreateType): Promise<CursoDetailTyp
 export async function UpdateCurso(id: string, data: CursoUpdateType): Promise<CursoDetailType> {
     const formData = buildFormData({
         nombre: data.nombre,
-        categoria: data.categoria,
+        categoriaId: data.categoriaId,
         slug: data.slug,
         descripcionCorta: data.descripcionCorta,
         descripcionCompleta: data.descripcionCompleta,
@@ -98,5 +98,10 @@ export async function DeleteCurso(id: string): Promise<ResponseType> {
 
 export async function GetMisCursosInscritos(estudianteId: string): Promise<MisCursoInscritoType[]> {
     const response = await apiService.get(`/inscripciones/estudiante/${estudianteId}`);
+    return response.data;
+}
+
+export async function CreateCategoria(data: CategoriaCreateType): Promise<CategoriaType> {
+    const response = await apiService.post("/categoria", data);
     return response.data;
 }

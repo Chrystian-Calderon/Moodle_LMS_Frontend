@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+    CreateCategoria,
     CreateCurso,
     DeleteCurso,
     GetCourseById,
@@ -11,7 +12,7 @@ import {
     UpdateCurso,
 } from "../Service/CursoService";
 
-import { CursoCreateType, CursoUpdateType } from "../Schema/CursoSchema";
+import { CategoriaCreateType, CursoCreateType, CursoUpdateType } from "../Schema/CursoSchema";
 
 export type TipoFiltro = "categoria" | "subcategoria";
 
@@ -39,7 +40,7 @@ export function useGetCurso(id: string, enabled = true) {
 
 export function useCategoriasCursos() {
     return useQuery({
-        queryKey: ["cursos", "categorias"],
+        queryKey: ["categorias"],
         queryFn: GetCourseCategories,
         staleTime: 1000 * 60 * 10,
     });
@@ -47,7 +48,7 @@ export function useCategoriasCursos() {
 
 export function useSubcategoriasCursos(categoriaId: string) {
     return useQuery({
-        queryKey: ["cursos", "subcategorias", categoriaId],
+        queryKey: ["categorias", "subcategorias", categoriaId],
         queryFn: () => GetCourseSubCategories(categoriaId),
         enabled: !!categoriaId,
         staleTime: 1000 * 60 * 10,
@@ -115,5 +116,16 @@ export function useMisCursosInscritos(estudianteId: string) {
         queryKey: ["mis-cursos-inscritos", estudianteId],
         queryFn: () => GetMisCursosInscritos(estudianteId),
         enabled: !!estudianteId,
+    });
+}
+
+export function useCreateCategoria() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: CategoriaCreateType) => CreateCategoria(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["categorias"] });
+        },
     });
 }

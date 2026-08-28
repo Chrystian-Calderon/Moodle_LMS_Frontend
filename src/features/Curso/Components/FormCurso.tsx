@@ -15,6 +15,7 @@ import {
     CursoType,
 } from "../Schema/CursoSchema";
 import { useCreateCurso, useUpdateCurso } from "../Hook/CursoHook";
+import { CategoriaCombobox } from "./CategoriaCombobox";
 
 type FormValues = CursoCreateType | CursoUpdateType;
 
@@ -43,7 +44,7 @@ export function FormCurso({ initialData, mode, onSuccess }: FormCursoProps) {
             mode === "edit"
                 ? {
                     nombre: initialData?.nombre ?? "",
-                    categoria: initialData?.categoria ?? "",
+                    categoriaId: initialData?.categoria?.id ?? "",
                     slug: initialData?.slug ?? "",
                     descripcionCorta: initialData?.descripcionCorta ?? "",
                     descripcionCompleta: initialData?.descripcionCompleta ?? "",
@@ -55,7 +56,7 @@ export function FormCurso({ initialData, mode, onSuccess }: FormCursoProps) {
                 }
                 : {
                     nombre: "",
-                    categoria: "",
+                    categoriaId: "",
                     slug: "",
                     descripcionCorta: "",
                     descripcionCompleta: "",
@@ -88,7 +89,7 @@ export function FormCurso({ initialData, mode, onSuccess }: FormCursoProps) {
             <FieldGroup>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <FormField control={form.control} name="nombre" label="Nombre del curso" placeholder="Ej: Maquillaje Profesional" />
-                    <FormField control={form.control} name="categoria" label="Categoría" placeholder="Ej: Maquillaje" />
+                    <CategoriaCombobox control={form.control} name="categoriaId" label="Categoría" />
                 </div>
 
                 <FormField

@@ -13,7 +13,7 @@ import {
     EliminarModuloInscripcion,
     EliminarInscripcionesPorEstudiante,
 } from "../Service/InscripcionService";
-import { CrearInscripcionSchemaType } from "../Schema/InscripcionSchema";
+import { CrearInscripcionSchemaType, CursoType } from "../Schema/InscripcionSchema";
 
 export function useCrearInscripcion(onSuccess?: () => void) {
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ export function useGetInscripciones(page: number, limit: number = 10, search?: s
 }
 
 export function useCursos() {
-    return useQuery({
+    return useQuery<CursoType[]>({
         queryKey: ["inscripciones", "cursos"],
         queryFn: ObtenerCursos,
     });

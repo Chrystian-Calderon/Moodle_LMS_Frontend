@@ -54,4 +54,15 @@ export const PERMISSIONS = {
         EDITAR: "permisos.editar",
         ELIMINAR: "permisos.eliminar",
     },
+
+    RECURSOS_LECCIONES: {
+        VER: "recursos_lecciones.ver",
+        CREAR: "recursos_lecciones.crear",
+        EDITAR: "recursos_lecciones.editar",
+        ELIMINAR: "recursos_lecciones.eliminar",
+    },
+
+    CERTIFICADOS: {
+        VER: "certificados.ver",
+    },
 } as const;

@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Select from "react-select";
+import Select, {
+    MultiValue,
+    SingleValue,
+} from "react-select";
 import { Button } from "@/components/ui/button";
 import {
     Field,
@@ -9,16 +12,20 @@ import {
     FieldLabel,
 } from "@/components/ui/field";
 import { Plus } from "lucide-react";
+
 import {
     CrearInscripcionSchema,
     CrearInscripcionSchemaType,
     CursoType,
+    ModuloType,
 } from "../Schema/InscripcionSchema";
+
 import {
     useCrearInscripcion,
     useCursos,
     useEstudiantes,
 } from "../Hook/InscripcionHook";
+
 import { DialogEstudiante } from "./DialogEstudiante";
 import { EstudianteType } from "../Schema/EstudianteSchema";
 
@@ -27,12 +34,32 @@ interface CrearInscripcionFormProps {
     showHeader?: boolean;
 }
 
-export function CrearInscripcionForm({ onSuccess, showHeader = true }: CrearInscripcionFormProps) {
-    const crearInscripcionMutation = useCrearInscripcion(onSuccess);
-    const { data: cursos = [], isLoading: loadingCursos } = useCursos();
-    const { data: estudiantes = [], isLoading: loadingEstudiantes } = useEstudiantes();
-    const [cursoId, setCursoId] = useState<string | null>(null);
-    const [openDialog, setOpenDialog] = useState(false);
+interface SelectOption {
+    value: string;
+    label: string;
+}
+
+export function CrearInscripcionForm({
+    onSuccess,
+}: CrearInscripcionFormProps) {
+    const crearInscripcionMutation =
+        useCrearInscripcion(onSuccess);
+
+    const {
+        data: cursos = [],
+        isLoading: loadingCursos,
+    } = useCursos();
+
+    const {
+        data: estudiantes = [],
+        isLoading: loadingEstudiantes,
+    } = useEstudiantes();
+
+    const [cursoId, setCursoId] =
+        useState<string | null>(null);
+
+    const [openDialog, setOpenDialog] =
+        useState(false);
 
     const {
         handleSubmit,
@@ -50,140 +77,241 @@ export function CrearInscripcionForm({ onSuccess, showHeader = true }: CrearInsc
     });
 
     const cursoSeleccionado = cursos.find(
-        (curso: CursoType) => curso.id === cursoId
+        (curso: CursoType) => curso.id === cursoId,
     );
 
-    const modulos = cursoSeleccionado?.modulos ?? [];
-    const cursoOptions = cursos.map((curso: CursoType) => ({
-        value: curso.id,
-        label: curso.nombre,
-    }));
-    const moduloOptions = modulos.map((modulo: CursoType) => ({
-        value: modulo.id,
-        label: modulo.nombre,
-    }));
-    const estudianteOptions = estudiantes.map((estudiante: EstudianteType) => ({
-        value: estudiante.id,
-        label: estudiante.username,
-    }));
+    const modulos: ModuloType[] =
+        cursoSeleccionado?.modulos ?? [];
 
-    const onSubmit = (data: CrearInscripcionSchemaType) => {
+    const cursoOptions: SelectOption[] =
+        cursos.map((curso: CursoType) => ({
+            value: curso.id,
+            label: curso.nombre,
+        }));
+
+    const moduloOptions: SelectOption[] =
+        modulos.map((modulo: ModuloType) => ({
+            value: modulo.id,
+            label: modulo.nombre,
+        }));
+
+    const estudianteOptions: SelectOption[] =
+        estudiantes.map(
+            (estudiante: EstudianteType) => ({
+                value: estudiante.id,
+                label: estudiante.username,
+            }),
+        );
+
+    const onSubmit = (
+        data: CrearInscripcionSchemaType,
+    ) => {
         crearInscripcionMutation.mutate(data);
     };
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="">
-                <div>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <FieldGroup className="gap-3">
-                            <Field>
-                                <FieldLabel htmlFor="cursoId">Curso</FieldLabel>
-                                <Controller
-                                    name="cursoId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Select
-                                            options={cursoOptions}
-                                            value={cursoOptions.find(
-                                                (option: any) => option.value === field.value
-                                            ) ?? null}
-                                            onChange={(option) => {
-                                                const nuevoCursoId = option ? option.value : null;
-                                                field.onChange(nuevoCursoId);
-                                                setCursoId(nuevoCursoId);
-                                                setValue("moduloId", "");
-                                            }}
-                                            isLoading={loadingCursos}
-                                            placeholder="Selecciona un curso"
-                                            isClearable
-                                        />
-                                    )}
-                                />
-                                {errors.cursoId && (
-                                    <span className="text-sm text-red-500">
-                                        {errors.cursoId.message}
-                                    </span>
-                                )}
-                            </Field>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FieldGroup className="gap-3">
+                    <Field>
+                        <FieldLabel htmlFor="cursoId">
+                            Curso
+                        </FieldLabel>
 
-                            <Field>
-                                <FieldLabel htmlFor="moduloId">Módulo</FieldLabel>
-                                <Controller
-                                    name="moduloId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Select
-                                            options={moduloOptions}
-                                            value={moduloOptions.find(
-                                                (option: any) => option.value === field.value
-                                            ) ?? null}
-                                            onChange={(option) => {
-                                                field.onChange(option ? option.value : null);
-                                            }}
-                                            isLoading={loadingCursos}
-                                            placeholder={cursoSeleccionado ? "Selecciona un módulo" : "Selecciona un curso primero"}
-                                            isDisabled={!cursoSeleccionado}
-                                            isClearable
-                                        />
-                                    )}
-                                />
-                                {errors.moduloId && (
-                                    <span className="text-sm text-red-500">
-                                        {errors.moduloId.message}
-                                    </span>
-                                )}
-                            </Field>
+                        <Controller
+                            name="cursoId"
+                            control={control}
+                            render={({ field }) => {
+                                const value =
+                                    cursoOptions.find(
+                                        (option) =>
+                                            option.value ===
+                                            field.value,
+                                    ) ?? null;
 
-                            <Field>
-                                <FieldLabel htmlFor="estudianteId">Estudiante</FieldLabel>
-                                <div className="flex gap-2 w-full">
-                                    <Controller
-                                        name="estudianteIds"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Select
-                                                className="flex-1"
-                                                options={estudianteOptions}
-                                                value={estudianteOptions.filter((option: any) => field.value.includes(option.value))}
-                                                onChange={(option) => {
-                                                    field.onChange(
-                                                        option.map((option) => option.value)
-                                                    )
-                                                }}
-                                                isLoading={loadingEstudiantes}
-                                                isMulti
-                                                placeholder="Selecciona un estudiante"
-                                                closeMenuOnSelect={false}
-                                            />
-                                        )}
+                                return (
+                                    <Select<SelectOption>
+                                        options={cursoOptions}
+                                        value={value}
+                                        onChange={(
+                                            option: SingleValue<SelectOption>,
+                                        ) => {
+                                            const nuevoCursoId =
+                                                option?.value ?? "";
+
+                                            field.onChange(
+                                                nuevoCursoId,
+                                            );
+
+                                            setCursoId(
+                                                option?.value ?? null,
+                                            );
+
+                                            setValue(
+                                                "moduloId",
+                                                "",
+                                            );
+                                        }}
+                                        isLoading={
+                                            loadingCursos
+                                        }
+                                        placeholder="Selecciona un curso"
+                                        isClearable
                                     />
-                                    <Button type="button" variant="outline" size="icon" onClick={() => setOpenDialog(true)} className="cursor-pointer">
-                                        <Plus className="size-4" />
-                                    </Button>
-                                </div>
-                                {errors.estudianteIds && (
-                                    <span className="text-sm text-red-500">
-                                        {errors.estudianteIds.message}
-                                    </span>
-                                )}
-                            </Field>
+                                );
+                            }}
+                        />
 
-                            <Field>
-                                <Button
-                                    type="submit"
-                                    disabled={crearInscripcionMutation.isPending}
-                                >
-                                    {crearInscripcionMutation.isPending
-                                        ? "Creando..."
-                                        : "Crear Inscripción"}
-                                </Button>
-                            </Field>
-                        </FieldGroup>
-                    </form>
-                </div>
-            </div>
-            <DialogEstudiante open={openDialog} onOpenChange={setOpenDialog} />
+                        {errors.cursoId && (
+                            <span className="text-sm text-red-500">
+                                {errors.cursoId.message}
+                            </span>
+                        )}
+                    </Field>
+
+                    <Field>
+                        <FieldLabel htmlFor="moduloId">
+                            Módulo
+                        </FieldLabel>
+
+                        <Controller
+                            name="moduloId"
+                            control={control}
+                            render={({ field }) => {
+                                const value =
+                                    moduloOptions.find(
+                                        (option) =>
+                                            option.value ===
+                                            field.value,
+                                    ) ?? null;
+
+                                return (
+                                    <Select<SelectOption>
+                                        options={moduloOptions}
+                                        value={value}
+                                        onChange={(
+                                            option: SingleValue<SelectOption>,
+                                        ) => {
+                                            field.onChange(
+                                                option?.value ?? "",
+                                            );
+                                        }}
+                                        isLoading={
+                                            loadingCursos
+                                        }
+                                        placeholder={
+                                            cursoSeleccionado
+                                                ? "Selecciona un módulo"
+                                                : "Selecciona un curso primero"
+                                        }
+                                        isDisabled={
+                                            !cursoSeleccionado
+                                        }
+                                        isClearable
+                                    />
+                                );
+                            }}
+                        />
+
+                        {errors.moduloId && (
+                            <span className="text-sm text-red-500">
+                                {errors.moduloId.message}
+                            </span>
+                        )}
+                    </Field>
+
+                    <Field>
+                        <FieldLabel htmlFor="estudianteIds">
+                            Estudiantes
+                        </FieldLabel>
+
+                        <div className="flex w-full gap-2">
+                            <Controller
+                                name="estudianteIds"
+                                control={control}
+                                render={({ field }) => {
+                                    const value =
+                                        estudianteOptions.filter(
+                                            (option) =>
+                                                field.value.includes(
+                                                    option.value,
+                                                ),
+                                        );
+
+                                    return (
+                                        <Select<SelectOption, true>
+                                            className="flex-1"
+                                            options={
+                                                estudianteOptions
+                                            }
+                                            value={value}
+                                            onChange={(
+                                                options: MultiValue<SelectOption>,
+                                            ) => {
+                                                field.onChange(
+                                                    options.map(
+                                                        (
+                                                            option,
+                                                        ) =>
+                                                            option.value,
+                                                    ),
+                                                );
+                                            }}
+                                            isLoading={
+                                                loadingEstudiantes
+                                            }
+                                            isMulti
+                                            placeholder="Selecciona estudiantes"
+                                            closeMenuOnSelect={
+                                                false
+                                            }
+                                        />
+                                    );
+                                }}
+                            />
+
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                    setOpenDialog(true)
+                                }
+                                className="cursor-pointer"
+                            >
+                                <Plus className="size-4" />
+                            </Button>
+                        </div>
+
+                        {errors.estudianteIds && (
+                            <span className="text-sm text-red-500">
+                                {
+                                    errors.estudianteIds
+                                        .message
+                                }
+                            </span>
+                        )}
+                    </Field>
+
+                    <Field>
+                        <Button
+                            type="submit"
+                            disabled={
+                                crearInscripcionMutation.isPending
+                            }
+                        >
+                            {crearInscripcionMutation.isPending
+                                ? "Creando..."
+                                : "Crear inscripción"}
+                        </Button>
+                    </Field>
+                </FieldGroup>
+            </form>
+
+            <DialogEstudiante
+                open={openDialog}
+                onOpenChange={setOpenDialog}
+            />
         </div>
     );
 }
