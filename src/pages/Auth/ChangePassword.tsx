@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/ModeToggle";
 import { AppTitle } from "@/components/common/Apptittle";
-import { Reset_password_form } from "@/features/Auth/Components/reset_password_form";
+import { ResetPassword } from "@/features/Auth/Components/ResetPassword";
 
 export function ChangePassword() {
     return (
@@ -62,7 +62,7 @@ export function ChangePassword() {
                                     </p>
                                 </div>
 
-                                <Reset_password_form />
+                                <ResetPassword />
                             </div>
                         </section>
                     </div>

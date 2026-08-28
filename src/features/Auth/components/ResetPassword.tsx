@@ -8,7 +8,7 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { AppTitle } from "@/components/common/Apptittle";
 import { FormField } from "@/components/common/form/FormField";
 
-export function Reset_password_form() {
+export function ResetPassword() {
     const changePasswordMutation = useChangePassword();
 
     const { control, handleSubmit } = useForm<ResetPasswordSchemaType>({

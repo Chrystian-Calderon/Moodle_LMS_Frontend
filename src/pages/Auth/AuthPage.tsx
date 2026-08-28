@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/ModeToggle";
 import { AppTitle } from "@/components/common/Apptittle";
-import { LoginForm } from "@/features/Auth/Components/loginform";
+import { LoginForm } from "@/features/Auth/Components/LoginForm";
 
 export const AuthPage = () => {
     return (
