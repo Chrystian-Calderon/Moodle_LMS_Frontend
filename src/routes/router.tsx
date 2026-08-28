@@ -59,6 +59,10 @@ const EditarInscripcionPage = lazy(
     () => import("@/pages/Inscripciones/EditarInscripcionPage")
 );
 
+const VerificarCertificadoPage = lazy(
+    () => import("@/pages/Certificados/VerificarCertificadoPage")
+);
+
 const InscripcionesPage = lazy(() =>
     import("@/pages/Inscripciones/InscripcionesPage").then((module) => ({
         default: module.InscripcionesPage,
@@ -96,6 +100,11 @@ export const router = createBrowserRouter([
                 path: "login",
                 element: lazyElement(AuthPage),
             },
+            {
+                path: "verificar/:codigo",
+                element: lazyElement(VerificarCertificadoPage),
+            },
+
             {
                 element: lazyElement(ProtectedRoute),
                 children: [

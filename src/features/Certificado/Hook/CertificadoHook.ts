@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { descargarCertificado, MisCertificados } from "../Service/CerticadoService";
+import { descargarCertificado, MisCertificados, verificarCertificado } from "../Service/CerticadoService";
 
 export function useMisCertificados() {
     return useQuery({
@@ -21,5 +21,17 @@ export function useDescargarCertificado() {
             link.remove();
             window.URL.revokeObjectURL(url);
         },
+    });
+}
+
+export function useVerificarCertificado(codigo: string | undefined) {
+    return useQuery({
+        queryKey: ["certificados", "verificar", codigo],
+
+        queryFn: () => verificarCertificado(codigo!),
+
+        enabled: Boolean(codigo),
+
+        retry: false,
     });
 }
