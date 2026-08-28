@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/ModeToggle";
 import { AppTitle } from "@/components/common/Apptittle";
-import { ResetPassword } from "@/features/Auth/Components/ResetPassword";
+import { ResetPassword } from "@/features/Auth/components/ResetPassword";
 
 export function ChangePassword() {
     return (
