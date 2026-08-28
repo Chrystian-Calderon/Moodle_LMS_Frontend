@@ -148,6 +148,12 @@ export const router = createBrowserRouter([
                                         index: true,
                                         element: lazyElement(CursosPage),
                                     },
+
+                                    {
+                                        path: "mis-cursos",
+                                        element: lazyElement(MisCursosPage),
+                                    },
+
                                     {
                                         path: ":id",
                                         children: [

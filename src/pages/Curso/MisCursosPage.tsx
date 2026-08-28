@@ -6,7 +6,7 @@ import { QueryState } from "@/components/common/QueryState";
 import { MascotNoEncontrado } from "@/components/common/mascots";
 
 import { MisCursoCard } from "@/features/Curso/Components/MisCursoCard";
-import { useMisCursosInscritos } from "@/features/Curso/Hook/CursoHook";
+import { useGetMisCursosInscritos } from "@/features/Curso/Hook/CursoHook";
 import { MisCursoModuloType } from "@/features/Curso/Schema/CursoSchema";
 
 import { useAuthStore } from "@/store/authStore";
@@ -21,7 +21,7 @@ export default function MisCursosPage() {
     isLoading,
     isError,
     error,
-  } = useMisCursosInscritos(usuario?.id ?? "");
+  } = useGetMisCursosInscritos(usuario?.id ?? "");
 
   const verModulo = (cursoId: string, _modulo: MisCursoModuloType) => {
     navigate(`/cursos/${cursoId}/modulos/${_modulo.id}`, { state: { from: "mis-cursos" } });

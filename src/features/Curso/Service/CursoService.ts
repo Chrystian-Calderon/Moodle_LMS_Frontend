@@ -96,7 +96,7 @@ export async function DeleteCurso(id: string): Promise<ResponseType> {
     return response.data;
 }
 
-export async function GetMisCursosInscritos(estudianteId: string): Promise<MisCursoInscritoType[]> {
+export async function GetMisInscripcionesEnCursos(estudianteId: string): Promise<MisCursoInscritoType[]> {
     const response = await apiService.get(`/inscripciones/estudiante/${estudianteId}`);
     return response.data;
 }
