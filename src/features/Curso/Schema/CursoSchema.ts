@@ -84,7 +84,11 @@ export type MisCursoModuloType = z.infer<typeof MisCursoModuloSchema>;
 export const MisCursoInscritoSchema = z.object({
     id: z.string(),
     nombre: z.string(),
-    categoria: z.string(),
+    categoria: z.object({
+        id: z.string(),
+        nombre: z.string(),
+        slug: z.string(),
+    }).nullable(),
     modulos: z.array(MisCursoModuloSchema),
 });
 

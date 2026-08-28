@@ -53,13 +53,6 @@ export const AuthPage = () => {
 
                         <section className="w-full">
                             <div className="mb-8 lg:hidden">
-                                <AppTitle
-                                    title="ELITE ACADEMY"
-                                    subtitle="Learning Management System"
-                                />
-                            </div>
-
-                            <div className="mb-8 lg:hidden">
                                 <h2 className="text-2xl font-bold tracking-tight text-sidebar-foreground">
                                     Bienvenido de nuevo
                                 </h2>

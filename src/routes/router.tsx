@@ -28,16 +28,26 @@ const InicioPage = lazy(() => import("@/pages/Welcome/InicioPage"));
 const ProfilePage = lazy(() => import("@/pages/Profile/ProfilePage"));
 
 const UsuarioPage = lazy(() => import("@/pages/Usuario/UsuarioPage"));
-const UsuarioDetallePage = lazy(() => import("@/pages/Usuario/UsuarioDetallePage"));
+const UsuarioDetallePage = lazy(() =>
+    import("@/pages/Usuario/UsuarioDetallePage")
+);
 
 const CursosPage = lazy(() => import("@/pages/Curso/CursoPage"));
-const CursoDetallePage = lazy(() => import("@/pages/Curso/CursoDetallePage"));
-const MisCursosPage = lazy(() => import("@/pages/Curso/MisCursosPage"));
+const CursoDetallePage = lazy(() =>
+    import("@/pages/Curso/CursoDetallePage")
+);
+const MisCursosPage = lazy(() =>
+    import("@/pages/Curso/MisCursosPage")
+);
 
 const ModulosPage = lazy(() => import("@/pages/Modulo/ModuloPage"));
-const ModuloDetallePage = lazy(() => import("@/pages/Modulo/ModuloDetallePage"));
+const ModuloDetallePage = lazy(() =>
+    import("@/pages/Modulo/ModuloDetallePage")
+);
 
-const LeccionDetallePage = lazy(() => import("@/pages/Leccion/LeccionDetallePage"));
+const LeccionDetallePage = lazy(() =>
+    import("@/pages/Leccion/LeccionDetallePage")
+);
 
 const CrearInscripcionPage = lazy(() =>
     import("@/pages/Inscripciones/CrearInscripcionPage").then((module) => ({
@@ -59,9 +69,11 @@ const MisCertificados = lazy(
     () => import("@/pages/Certificados/MisCertificados")
 );
 
-const Loading = () => <div>Cargando...</div>;
+import { Loading } from "@/components/common/app/Loading";
 
-const lazyElement = (Component: React.LazyExoticComponent<React.ComponentType>) => (
+const lazyElement = (
+    Component: React.LazyExoticComponent<React.ComponentType>
+) => (
     <Suspense fallback={<Loading />}>
         <Component />
     </Suspense>
@@ -103,6 +115,7 @@ export const router = createBrowserRouter([
                                 path: "perfil",
                                 element: lazyElement(ProfilePage),
                             },
+
                             {
                                 path: "usuario",
                                 children: [
@@ -112,10 +125,13 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: ":id",
-                                        element: lazyElement(UsuarioDetallePage),
+                                        element: lazyElement(
+                                            UsuarioDetallePage
+                                        ),
                                     },
                                 ],
                             },
+
                             {
                                 path: "cursos",
                                 children: [
@@ -124,29 +140,31 @@ export const router = createBrowserRouter([
                                         element: lazyElement(CursosPage),
                                     },
                                     {
-                                        path: "mis-cursos",
-                                        element: lazyElement(MisCursosPage),
-                                    },
-                                    {
                                         path: ":id",
                                         children: [
                                             {
                                                 index: true,
-                                                element: lazyElement(CursoDetallePage),
+                                                element: lazyElement(
+                                                    CursoDetallePage
+                                                ),
                                             },
                                             {
                                                 path: "modulos",
                                                 children: [
                                                     {
                                                         index: true,
-                                                        element: lazyElement(ModulosPage),
+                                                        element: lazyElement(
+                                                            ModulosPage
+                                                        ),
                                                     },
                                                     {
                                                         path: ":moduloId",
                                                         children: [
                                                             {
                                                                 index: true,
-                                                                element: lazyElement(ModuloDetallePage),
+                                                                element: lazyElement(
+                                                                    ModuloDetallePage
+                                                                ),
                                                             },
                                                             {
                                                                 path: "lecciones/:leccionId",
@@ -162,16 +180,26 @@ export const router = createBrowserRouter([
                                     },
                                 ],
                             },
+
+                            {
+                                path: "mis-cursos",
+                                element: lazyElement(MisCursosPage),
+                            },
+
                             {
                                 path: "inscripciones",
                                 children: [
                                     {
                                         index: true,
-                                        element: lazyElement(InscripcionesPage),
+                                        element: lazyElement(
+                                            InscripcionesPage
+                                        ),
                                     },
                                     {
                                         path: "crear",
-                                        element: lazyElement(CrearInscripcionPage),
+                                        element: lazyElement(
+                                            CrearInscripcionPage
+                                        ),
                                     },
                                     {
                                         path: "estudiante/:estudianteId",

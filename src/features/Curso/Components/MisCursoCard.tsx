@@ -16,7 +16,7 @@ export function MisCursoCard({ curso, onVerModulo }: MisCursoCardProps) {
                 <div className="min-w-0 flex-1">
                     {curso.categoria && (
                         <p className="text-xs font-medium text-primary">
-                            {curso.categoria}
+                            {curso.categoria.nombre ?? ""}
                         </p>
                     )}
                     <h2 className="mt-1 line-clamp-2 text-base font-semibold leading-snug text-foreground">
