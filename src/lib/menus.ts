@@ -41,6 +41,6 @@ export const menuItems = [
     {
         title: "Mis certificados",
         icon: faCertificate,
-        url: "/mis-certificados",
+        url: "/certificados",
     },
 ];
