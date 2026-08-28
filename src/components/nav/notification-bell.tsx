@@ -1,7 +1,11 @@
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bell } from "lucide-react";
+
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,6 +44,7 @@ const formatearFecha = (fecha?: string) => {
 };
 
 export const NotificationBell = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const {
@@ -53,14 +58,24 @@ export const NotificationBell = () => {
 
   const marcarComoLeida = useMarcarComoLeida();
 
-  const handleMarcarLeida = (
+  const handleNotificacionClick = (
     id: string,
     leida: boolean
   ) => {
-    // Si ya fue leída no hacemos otra petición
-    if (leida) return;
+    // Si ya está leída, solo cerramos y navegamos
+    if (leida) {
+      setOpen(false);
+      navigate("/certificados");
+      return;
+    }
 
-    marcarComoLeida.mutate(id);
+    // Si no está leída, primero la marcamos
+    marcarComoLeida.mutate(id, {
+      onSuccess: () => {
+        setOpen(false);
+        navigate("/certificados");
+      },
+    });
   };
 
   return (
@@ -138,7 +153,7 @@ export const NotificationBell = () => {
                     "bg-muted/50"
                   )}
                   onClick={() =>
-                    handleMarcarLeida(
+                    handleNotificacionClick(
                       notificacion.id,
                       notificacion.leida
                     )
@@ -175,7 +190,13 @@ export const NotificationBell = () => {
               <DropdownMenuSeparator />
 
               <div className="px-2 py-2">
-                <DropdownMenuItem className="cursor-pointer justify-center text-xs text-muted-foreground">
+                <DropdownMenuItem
+                  className="cursor-pointer justify-center text-xs text-muted-foreground"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/certificados");
+                  }}
+                >
                   Ver todas las notificaciones
                 </DropdownMenuItem>
               </div>
