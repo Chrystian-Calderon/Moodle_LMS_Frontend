@@ -25,6 +25,7 @@ import {
 } from "../ui/dropdown-menu";
 
 import { Button } from "../ui/button";
+import { NotificationBell } from "./notification-bell";
 
 export const Headerbar = () => {
     const location = useLocation();
@@ -80,6 +81,8 @@ export const Headerbar = () => {
 
             <div className="flex items-center gap-2">
                 <ModeToggle />
+
+                <NotificationBell />
 
                 <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
 
